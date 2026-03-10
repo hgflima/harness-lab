@@ -1,0 +1,13 @@
+{
+  "name": "prd-generator",
+  "version": "1.0.0",
+  "description": "Context engineering PRD generator for AI-driven software development. Creates structured context artifacts (user stories, E2E test specs, architecture, agent-assignable tasks with parallel execution lanes) for AI agents.",
+  "categories": ["product", "planning"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": ["prd-generator"],
+    "commands": [],
+    "agents": [],
+    "hooks": []
+  }
+}

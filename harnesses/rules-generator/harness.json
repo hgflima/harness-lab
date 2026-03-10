@@ -1,0 +1,13 @@
+{
+  "name": "rules-generator",
+  "version": "1.0.0",
+  "description": "Analyze a project's stack and generate tailored .claude/rules/ files for consistent AI coding standards. Interviews the developer, consults a rule catalog, and produces scoped rule files.",
+  "categories": ["harness", "developer-experience"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": ["rules-generator"],
+    "commands": [],
+    "agents": [],
+    "hooks": []
+  }
+}

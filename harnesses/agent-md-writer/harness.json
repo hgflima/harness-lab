@@ -1,0 +1,13 @@
+{
+  "name": "agent-md-writer",
+  "version": "1.0.0",
+  "description": "Generate and maintain high-quality CLAUDE.md and AGENT.md files for any project. Onboards code agents to a codebase with progressive disclosure and best practices.",
+  "categories": ["harness", "developer-experience"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": ["agent-md-writer"],
+    "commands": [],
+    "agents": [],
+    "hooks": []
+  }
+}

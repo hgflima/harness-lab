@@ -1,0 +1,22 @@
+{
+  "skill_name": "prd-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Preciso planejar uma feature de autenticação com OAuth2 para um app Next.js com Prisma e PostgreSQL. Time de 3 devs (2 pleno, 1 senior), prazo de 6 semanas. O desenvolvimento vai ser quase todo com IA, então preciso que o PRD tenha testes E2E bem especificados e um plano de paralelização claro. Respostas da entrevista: é feature nova, sistema já existe com auth básica por email/senha, preciso adicionar Google e GitHub OAuth. In scope: login social, link de contas existentes, logout. Out scope: MFA, admin panel. P0: login com Google, P1: login com GitHub, P2: link de contas. Personas: dev que quer login rápido e usuário não-técnico. KPIs: reduzir tempo de signup de 2min para 30s, aumentar conversão de signup em 15%.",
+      "expected_output": "PRD completo com 9 arquivos no nível Standard. O arquivo 05-e2e-test-specs.md deve ter testes mapeados para cada user story (especialmente fluxo OAuth completo, erro de provider, e link de contas). O task breakdown deve ter parallel lanes claras (ex: Lane A backend OAuth, Lane B frontend UI, Lane D testes E2E). Interface contracts devem estar definidos.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "hey can you help me plan a refactor of our payment processing module? it's a Rails app with Stripe integration, the code is getting messy and we need to add support for subscriptions. just me working on it, maybe 2 weeks. I'll be using AI to write most of the code so I need really clear test specs. Discovery answers: it's a refactor + enhancement, current code handles one-time payments via Stripe Checkout, need to add recurring billing. In scope: subscription CRUD, billing portal, webhook handling. Out scope: multiple payment providers, invoicing. P0: create/cancel subscription, P1: upgrade/downgrade, P2: billing portal. Solo dev, Rails 7 + PostgreSQL + Sidekiq. KPI: zero payment failures during migration.",
+      "expected_output": "PRD no nível Lite ou Standard (1 dev, 2 semanas — provavelmente Lite). Deve ter E2E test specs mesmo no Lite (adaptado). Acceptance criteria ultra-específicos para Stripe webhooks (subscription.created, invoice.paid, etc). Como é solo dev, paralelização é entre coder agent e tester agent — tasks de implementação separadas de tasks de teste.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Estamos planejando uma migração de monolito para microserviços no nosso e-commerce. Stack atual: Java Spring Boot com MySQL, deploy em AWS ECS. Equipe de 12 pessoas, 3 squads. Precisamos de PRD com compliance PCI-DSS porque processamos pagamentos. O dev será 80% com agentes IA rodando em paralelo nos 3 squads. Respostas: migração em fases, começando pelo módulo de catálogo de produtos. In scope fase 1: extrair serviço de catálogo, API gateway, service discovery. Out scope fase 1: checkout, user service, order service. P0: CRUD de produtos via microserviço, P1: search com Elasticsearch, P2: recomendações. 3 squads: Platform (infra), Catalog (domínio), QA (testes). KPIs: latência p95 < 100ms, zero downtime durante migração, manter PCI-DSS compliance.",
+      "expected_output": "PRD Enterprise com 9+ arquivos, seções de compliance PCI-DSS. E2E test specs devem cobrir: migração sem downtime (teste de rollback), latência p95, e integridade de dados pós-migração. Parallel lanes organizadas por squad (Platform, Catalog, QA). Interface contracts entre API gateway e serviço de catálogo. Dependency matrix detalhada com integration points claros entre squads."
+    }
+  ]
+}

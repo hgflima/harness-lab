@@ -1,0 +1,33 @@
+{
+  "name": "harness-lab",
+  "version": "1.0.0",
+  "description": "Curated collection of AI agent harnesses for Claude Code. Install, manage, and share skills, commands, agents, and hooks.",
+  "author": "hgflima",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "harness-lab": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "harnesses/",
+    "catalog.json"
+  ],
+  "keywords": [
+    "claude-code",
+    "ai-agent",
+    "harness",
+    "skills",
+    "commands",
+    "developer-tools"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hgflima/harness-lab.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

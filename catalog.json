@@ -7,19 +7,19 @@
       "description": "Harnesses for product definition, requirements, and planning"
     },
     {
-      "id": "planning",
-      "name": "Planning",
-      "description": "Harnesses for project planning, task decomposition, and estimation"
+      "id": "harness-engineering",
+      "name": "Harness Engineering",
+      "description": "Harnesses for building, configuring, and operating AI development"
     },
     {
-      "id": "harness",
-      "name": "Harness",
-      "description": "Meta-harnesses for configuring and onboarding AI agents to codebases"
+      "id": "software-engineering",
+      "name": "Software Engineering",
+      "description": "Harnesses for coding, architecture, testing, and development workflows"
     },
     {
-      "id": "developer-experience",
-      "name": "Developer Experience",
-      "description": "Harnesses that improve the developer workflow with AI agents"
+      "id": "design",
+      "name": "Design",
+      "description": "Harnesses for UI/UX design, visual assets, and design system workflows"
     }
   ],
   "harnesses": [
@@ -27,32 +27,36 @@
       "name": "prd-generator",
       "version": "1.0.0",
       "description": "Context engineering PRD generator for AI-driven software development",
-      "categories": ["product", "planning"],
+      "categories": ["product", "software-engineering"],
       "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/prd-generator",
       "path": "harnesses/prd-generator"
     },
     {
       "name": "agent-md-writer",
       "version": "1.0.0",
       "description": "Generate and maintain high-quality CLAUDE.md and AGENT.md files",
-      "categories": ["harness", "developer-experience"],
+      "categories": ["harness-engineering"],
       "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/agent-md-writer",
       "path": "harnesses/agent-md-writer"
     },
     {
       "name": "rules-generator",
       "version": "1.0.0",
       "description": "Analyze a project's stack and generate tailored .claude/rules/ files",
-      "categories": ["harness", "developer-experience"],
+      "categories": ["harness-engineering"],
       "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/rules-generator",
       "path": "harnesses/rules-generator"
     },
     {
       "name": "github-readme-writer",
       "version": "1.0.0",
-      "description": "A Claude Code skill that generates comprehensive, professional README.md files for any project.",
-      "categories": [],
+      "description": "A Claude Code skill that generates comprehensive, professional README.md files for any project",
+      "categories": ["software-engineering"],
       "author": "alfredang",
+      "repository_url": "https://github.com/alfredang/skills/tree/main/readme",
       "path": "harnesses/github-readme-writer"
     }
   ]

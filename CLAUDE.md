@@ -31,7 +31,8 @@ harness-lab/
 │       └── skills/<name>/      — Skill files (SKILL.md, references/, scripts/, evals/)
 │       └── commands/<name>.md  — Slash commands files (<name>.md, references, scripts, etc)
 │       └── agents/<name>.md    — Subagent files (<name>.md, references, scripts, etc)
-│       └── rules/<name>.md     — Rule files(<name>.md, references, scripts, etc)
+│       └── rules/<name>.md     — Rule files (<name>.md, references, scripts, etc)
+│       └── hooks/              — Hook scripts and config (hooks.json, *.sh)
 └── catalog.json                — Registry index (categories + harness entries)
 ```
 
@@ -61,3 +62,8 @@ No build step. No transpilation. Edit and run.
 - **harness.json lists all artifacts explicitly.** The uninstaller reads this to know what to remove. If an artifact isn't listed, it won't be installed or uninstalled.
 - **Three scopes:** `global` (~/.claude/), `project` (<cwd>/.claude/), `local` (<cwd>/.claude/local/). Default is `project`.
 - **All code and docs in English.** Even though the author writes in Portuguese, all code, comments, docs, and PRD output are in English for token economy and universal parseability.
+
+## Rules Reference
+
+- [catalog.json contract](.claude/rules/catalog-json-contract.md) — JSON schema and invariants for the root `catalog.json` registry file.
+- [harness.json contract](.claude/rules/harness-json-contract.md) — JSON schema and invariants for `harnesses/<name>/harness.json` manifest files.

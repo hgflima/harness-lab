@@ -29,10 +29,11 @@ harness-lab/
 │   └── <name>/
 │       ├── harness.json        — Metadata: name, version, categories, artifact list
 │       └── skills/<name>/      — Skill files (SKILL.md, references/, scripts/, evals/)
+│       └── commands/<name>.md  — Slash commands files (<name>.md, references, scripts, etc)
+│       └── agents/<name>.md    — Subagent files (<name>.md, references, scripts, etc)
+│       └── rules/<name>.md     — Rule files(<name>.md, references, scripts, etc)
 └── catalog.json                — Registry index (categories + harness entries)
 ```
-
-Key convention: inside each harness, `skills/<name>/` mirrors the `.claude/skills/<name>/` structure so install is a direct copy — no path remapping.
 
 ## Development
 

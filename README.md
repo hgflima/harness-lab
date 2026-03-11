@@ -14,11 +14,6 @@
 
 </div>
 
-## Screenshot
-
-<!-- Add a screenshot of your app here -->
-<!-- ![Screenshot](screenshot.png) -->
-
 ## About
 
 harness-lab is a curated public registry of AI agent harnesses (skills, commands, agents, hooks) for Claude Code. It includes a zero-dependency Node.js CLI for browsing, installing, and managing harnesses from GitHub directly into `.claude/` directories.
@@ -27,6 +22,20 @@ harness-lab is a curated public registry of AI agent harnesses (skills, commands
 - Install skills, commands, agents, and hooks with a single command
 - Three installation scopes: global, project, or local
 - Always fetches the latest versions from GitHub — no local cache
+
+## Why not plugins?
+
+Claude Code has a native plugin system — so why does harness-lab distribute artifacts as standalone `.claude/` files instead?
+
+**Practical install/uninstall workflow.** The CLI lets you browse, install, and remove artifacts from any terminal in seconds (`harness-lab install ...` / `harness-lab uninstall ...`). The `init` command bootstraps slash commands so you can also manage everything from inside Claude Code (`/harness-lab:install`). No marketplace setup, no manifest files — just files copied in and out of `.claude/`.
+
+**Granularity and cohesion.** Harnesses tend to have higher granularity and cohesion than plugins. Each harness groups artifacts around a single, well-defined purpose (e.g. PRD generation), while plugins tend to bundle loosely related capabilities together. This matters because tighter cohesion means less irrelevant context loaded per task — and with harness-lab, each artifact is an independent file you can install or remove individually.
+
+**Persistent ghost errors.** Plugins can leave behind errors that are difficult to trace and persist even after the plugin is uninstalled or disabled. The screenshot below shows a `/doctor` output reporting "Plugin ralph-wiggum not found in marketplace" — an error that lingers with no clear way to resolve it. File-based artifacts don't have this problem: uninstalling simply deletes the files, leaving no residual state.
+
+![Plugin error example](images/plugin-error.jpeg)
+
+Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. But for a curated registry of prompt-based artifacts, the file-based approach is simpler and more efficient.
 
 ### Available Harnesses
 
@@ -51,34 +60,34 @@ harness-lab is a curated public registry of AI agent harnesses (skills, commands
 
 ```
 ┌─────────────────────────────────────────────────┐
-│                   User Layer                     │
-│                                                  │
-│   npx harness-lab          /harness-lab:install  │
-│   (Terminal CLI)           (Slash Commands)       │
-└────────────┬──────────────────────┬──────────────┘
+│                   User Layer                    │
+│                                                 │
+│   npx harness-lab          /harness-lab:install │
+│   (Terminal CLI)           (Slash Commands)     │
+└────────────┬──────────────────────┬─────────────┘
              │                      │
              ▼                      ▼
-┌─────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────┐
 │                 CLI Layer (src/cli/)              │
-│                                                  │
+│                                                   │
 │   categories · list · install · uninstall · update│
-└────────────────────────┬────────────────────────┘
+└────────────────────────┬──────────────────────────┘
                          │
                          ▼
-┌─────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────┐
 │               Core Layer (src/core/)             │
 │                                                  │
 │   catalog.js     installer.js     scope.js       │
 │   (fetch index)  (download/remove) (resolve path)│
-└────────────────────────┬────────────────────────┘
+└────────────────────────┬─────────────────────────┘
                          │
                          ▼
-┌─────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────┐
 │              GitHub (Remote Data)                 │
-│                                                  │
-│   raw.githubusercontent.com   api.github.com     │
+│                                                   │
+│   raw.githubusercontent.com   api.github.com      │
 │   (catalog.json, artifacts)   (directory listings)│
-└─────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────┘
 ```
 
 ## Project Structure
@@ -115,41 +124,46 @@ harness-lab/
 
 - [Node.js](https://nodejs.org/) >= 18.0.0
 
-### Quick Install (via npx)
+### Option A: Run with npx (no install needed)
+
+Run any CLI command directly via `npx` — no global install, no permissions required:
 
 ```bash
-npx github:hgflima/harness-lab@latest
+npx github:hgflima/harness-lab@latest categories
+npx github:hgflima/harness-lab@latest list software-engineering
+npx github:hgflima/harness-lab@latest install prd-generator --scope project
 ```
 
-This bootstraps the CLI by installing it globally and copying slash commands to your project.
+### Option B: Global Install
 
-### Manual Install
+Install once for a shorter command:
 
 ```bash
-# Clone the repository
+# Via npx (installs globally + copies slash commands)
+npx github:hgflima/harness-lab@latest
+
+# Or clone and install manually
 git clone https://github.com/hgflima/harness-lab.git
 cd harness-lab
-
-# Install globally
 npm install -g .
 ```
 
 ### Usage
 
 ```bash
-# List all categories
+# With npx (no global install)
+npx github:hgflima/harness-lab@latest categories
+npx github:hgflima/harness-lab@latest list software-engineering
+npx github:hgflima/harness-lab@latest install prd-generator --scope project
+npx github:hgflima/harness-lab@latest uninstall prd-generator
+npx github:hgflima/harness-lab@latest update
+npx github:hgflima/harness-lab@latest update prd-generator
+
+# With global install
 harness-lab categories
-
-# List harnesses in a category
 harness-lab list software-engineering
-
-# Install a harness into your project
 harness-lab install prd-generator --scope project
-
-# Uninstall a harness
 harness-lab uninstall prd-generator
-
-# Update a harness (or all harnesses)
 harness-lab update
 harness-lab update prd-generator
 ```

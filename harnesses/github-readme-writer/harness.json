@@ -6,7 +6,7 @@
   "author": "alfredang",
   "artifacts": {
     "skills": ["github-readme-writer"],
-    "commands": [],
+    "commands": ["create-github-readme"],
     "agents": [],
     "hooks": []
   }

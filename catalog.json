@@ -46,6 +46,14 @@
       "categories": ["harness", "developer-experience"],
       "author": "hgflima",
       "path": "harnesses/rules-generator"
+    },
+    {
+      "name": "github-readme-writer",
+      "version": "1.0.0",
+      "description": "A Claude Code skill that generates comprehensive, professional README.md files for any project.",
+      "categories": [],
+      "author": "alfredang",
+      "path": "harnesses/github-readme-writer"
     }
   ]
 }

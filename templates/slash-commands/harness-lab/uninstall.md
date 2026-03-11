@@ -1,5 +1,5 @@
 ---
-description: Uninstall a harness from your project
+description: "harness-lab:uninstall — Uninstall a harness from your project"
 arguments:
   - name: harness_name
     description: Name of the harness to uninstall
@@ -11,12 +11,12 @@ arguments:
 
 Run the following command and show the output to the user:
 
+If a scope argument was provided:
 ```bash
 harness-lab uninstall $ARGUMENTS.harness_name --scope $ARGUMENTS.scope
 ```
 
 If no scope argument was provided, run without the --scope flag (defaults to project):
-
 ```bash
 harness-lab uninstall $ARGUMENTS.harness_name
 ```

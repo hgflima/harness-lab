@@ -23,7 +23,8 @@ harness-lab/
 │   │   ├── categories.js, list.js, install.js, uninstall.js, update.js
 │   └── setup/
 │       └── init.js             — npx bootstrap (npm install -g + copy slash commands)
-├── templates/slash-commands/   — 5 .md files that Claude Code reads as slash commands
+├── templates/slash-commands/
+│   └── harness-lab/           — 5 .md files → .claude/commands/harness-lab/ (/harness-lab:*)
 ├── harnesses/                  — The curated harness collection
 │   └── <name>/
 │       ├── harness.json        — Metadata: name, version, categories, artifact list

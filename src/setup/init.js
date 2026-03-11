@@ -36,30 +36,33 @@ export async function init(_args) {
 
   // Step 2: Ask scope for slash commands
   console.log('  2. Where should I install the slash commands?\n');
-  console.log('     1) global  (~/.claude/commands/)');
-  console.log('     2) project (.claude/commands/)');
-  console.log('     3) local   (.claude/local/commands/)\n');
+  console.log('     1) global  (~/.claude/commands/harness-lab/)');
+  console.log('     2) project (.claude/commands/harness-lab/)');
+  console.log('     3) local   (.claude/local/commands/harness-lab/)\n');
 
   const choice = await prompt('     Choose (1-3): ');
   const scopeMap = { '1': 'global', '2': 'project', '3': 'local' };
   const scope = scopeMap[choice] || 'project';
 
-  // Step 3: Copy slash commands
+  // Step 3: Copy slash commands (templates/slash-commands/harness-lab/ → commands/harness-lab/)
   const target = resolveTarget(scope);
-  const commandsDir = join(target, 'commands');
-  await mkdir(commandsDir, { recursive: true });
+  const destDir = join(target, 'commands', 'harness-lab');
+  await mkdir(destDir, { recursive: true });
 
-  const templatesDir = join(__dirname, '..', '..', 'templates', 'slash-commands');
-  const files = await readdir(templatesDir);
+  const srcDir = join(__dirname, '..', '..', 'templates', 'slash-commands', 'harness-lab');
+  const files = await readdir(srcDir);
+  let count = 0;
 
   for (const file of files) {
     if (!file.endsWith('.md')) continue;
-    const content = await readFile(join(templatesDir, file), 'utf-8');
-    await writeFile(join(commandsDir, file), content, 'utf-8');
-    console.log(`     ✓ Installed ${file}`);
+    const content = await readFile(join(srcDir, file), 'utf-8');
+    await writeFile(join(destDir, file), content, 'utf-8');
+    const cmdName = file.replace('.md', '');
+    console.log(`     ✓ /harness-lab:${cmdName}`);
+    count++;
   }
 
-  console.log(`\n  ✓ Installed ${files.length} slash commands (${scope})`);
+  console.log(`\n  ✓ Installed ${count} slash commands (${scope})`);
   console.log('\n  Try: harness-lab categories');
-  console.log('  Or in Claude Code: /harness-lab-categories\n');
+  console.log('  Or in Claude Code: /harness-lab:categories\n');
 }

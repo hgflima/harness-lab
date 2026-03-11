@@ -85,7 +85,7 @@ This document maps every user story to its end-to-end test specification. Tests 
 | Step | Action | Expected Result | Assertion |
 |------|--------|----------------|-----------|
 | 1 | Run `harness-lab init` with stdin providing "2" (project scope) | CLI prompts for scope, accepts input | Process exits with code 0 |
-| 2 | Check temp/.claude/commands/ | 5 .md files exist | `harness-lab-categories.md`, `harness-lab-list.md`, `harness-lab-install.md`, `harness-lab-uninstall.md`, `harness-lab-update.md` all exist |
+| 2 | Check temp/.claude/commands/harness-lab/ | 5 .md files exist | `categories.md`, `list.md`, `install.md`, `uninstall.md`, `update.md` all exist inside `commands/harness-lab/` |
 
 ### E2E-002: Init creates correct directory per scope
 
@@ -97,8 +97,8 @@ This document maps every user story to its end-to-end test specification. Tests 
 
 | Step | Action | Expected Result | Assertion |
 |------|--------|----------------|-----------|
-| 1 | Run init with scope "global" | Files in ~/.claude/commands/ | Path.join(homedir, '.claude', 'commands') contains 5 .md files |
-| 2 | Run init with scope "local" | Files in .claude/local/commands/ | Path contains 5 .md files |
+| 1 | Run init with scope "global" | Files in ~/.claude/commands/harness-lab/ | `~/.claude/commands/harness-lab/` contains 5 .md files |
+| 2 | Run init with scope "local" | Files in .claude/local/commands/harness-lab/ | `.claude/local/commands/harness-lab/` contains 5 .md files |
 
 ---
 
@@ -212,9 +212,9 @@ This document maps every user story to its end-to-end test specification. Tests 
 
 | Step | Action | Expected Result | Assertion |
 |------|--------|----------------|-----------|
-| 1 | Read harness-lab-install.md | Contains CLI command | File content includes `harness-lab install` |
-| 2 | Read harness-lab-categories.md | Contains CLI command | File content includes `harness-lab categories` |
-| 3 | Read all 5 slash command files | Each references its CLI counterpart | All 5 files contain `harness-lab <command>` |
+| 1 | Read commands/harness-lab/install.md | Contains CLI command | File content includes `harness-lab install` |
+| 2 | Read commands/harness-lab/categories.md | Contains CLI command | File content includes `harness-lab categories` |
+| 3 | Read all 5 files in commands/harness-lab/ | Each references its CLI counterpart | All 5 files contain `harness-lab <command>` |
 
 ---
 

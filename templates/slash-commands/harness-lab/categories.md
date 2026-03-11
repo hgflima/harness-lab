@@ -1,5 +1,5 @@
 ---
-description: List available harness categories from harness-lab
+description: "harness-lab:categories — List available harness categories"
 ---
 
 Run the following command and show the output to the user:

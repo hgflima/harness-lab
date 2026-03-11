@@ -38,9 +38,9 @@ User (Terminal / Claude Code)
     │       │
     │       └── bin/cli.js → src/cli/<command>.js → src/core/<module>.js
     │
-    └── Claude Code: /harness-lab-<command> <args>
+    └── Claude Code: /harness-lab:<command> <args>
             │
-            └── .claude/commands/harness-lab-<command>.md
+            └── .claude/commands/harness-lab/<command>.md
                     │
                     └── Instructs Claude to run: harness-lab <command> <args>
                             │

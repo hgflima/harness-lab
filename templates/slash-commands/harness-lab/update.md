@@ -1,5 +1,5 @@
 ---
-description: Update harnesses to the latest version from harness-lab
+description: "harness-lab:update — Update harnesses to the latest version"
 arguments:
   - name: harness_name
     description: Name of a specific harness to update (optional — updates all if omitted)

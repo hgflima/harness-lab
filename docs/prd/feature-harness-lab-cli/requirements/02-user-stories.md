@@ -45,9 +45,9 @@
 
 **Acceptance Criteria (Coder ↔ Tester Contract):**
 - [ ] Given a machine with Node.js >= 18 and npm, when the user runs `npx github:hgflima/harness-lab@latest`, then the CLI prompts for scope selection (global/project/local) and installs the `harness-lab` command globally
-- [ ] Given the user selects scope "global", when init completes, then 5 slash command `.md` files exist in `~/.claude/commands/`
-- [ ] Given the user selects scope "project", when init completes, then 5 slash command `.md` files exist in `.claude/commands/` relative to cwd
-- [ ] Given the user selects scope "local", when init completes, then 5 slash command `.md` files exist in `.claude/local/commands/` relative to cwd
+- [ ] Given the user selects scope "global", when init completes, then 5 slash command `.md` files exist in `~/.claude/commands/harness-lab/`
+- [ ] Given the user selects scope "project", when init completes, then 5 slash command `.md` files exist in `.claude/commands/harness-lab/` relative to cwd
+- [ ] Given the user selects scope "local", when init completes, then 5 slash command `.md` files exist in `.claude/local/commands/harness-lab/` relative to cwd
 - [ ] Given init completed successfully, when the user runs `harness-lab --version`, then it outputs the current version
 
 **Complexity:** L
@@ -150,15 +150,15 @@
 #### Story US-007: Slash commands delegate to CLI
 
 **As a** developer using Claude Code
-**I want** to run `/harness-lab-install prd-generator` in Claude Code
+**I want** to run `/harness-lab:install prd-generator` in Claude Code
 **So that** I get the same result as running `harness-lab install prd-generator` in the terminal
 
 **Priority:** P0 (Must Have)
 
 **Acceptance Criteria:**
-- [ ] Given slash commands are installed, when Claude Code reads `harness-lab-install.md`, then it contains instructions to run the `harness-lab install` CLI command
-- [ ] Given slash commands are installed, when Claude Code reads `harness-lab-categories.md`, then it contains instructions to run the `harness-lab categories` CLI command
-- [ ] Given all 5 slash commands, when each is read, then it maps to the corresponding CLI command
+- [ ] Given slash commands are installed, when Claude Code reads `commands/harness-lab/install.md`, then it contains instructions to run the `harness-lab install` CLI command
+- [ ] Given slash commands are installed, when Claude Code reads `commands/harness-lab/categories.md`, then it contains instructions to run the `harness-lab categories` CLI command
+- [ ] Given all 5 slash commands in `commands/harness-lab/`, when each is read, then it maps to the corresponding CLI command
 
 **Complexity:** S
 **E2E Test Refs:** E2E-009
@@ -209,7 +209,7 @@
 | Step | User Action | System Response | Verification |
 |------|------------|----------------|-------------|
 | 1 | `npx github:hgflima/harness-lab@latest` | Prompts for scope | Prompt appears |
-| 2 | Selects "1" (global) | Installs CLI + slash commands | Files in ~/.claude/commands/ |
+| 2 | Selects "1" (global) | Installs CLI + slash commands | Files in ~/.claude/commands/harness-lab/ |
 | 3 | `harness-lab categories` | Lists categories | Output matches catalog.json |
 | 4 | `harness-lab list product` | Lists product harnesses | Shows prd-generator |
 | 5 | `harness-lab install prd-generator` | Fetches and installs | Files in .claude/skills/prd-generator/ |

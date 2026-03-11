@@ -182,12 +182,12 @@
 
 #### TASK-010: Init command (setup)
 
-**Description:** Run `npm install -g` on the package. Prompt user for scope (1=global, 2=project, 3=local). Copy 5 slash command templates to the chosen scope's commands/ directory.
+**Description:** Run `npm install -g` on the package. Prompt user for scope (1=global, 2=project, 3=local). Copy 5 slash command templates to the chosen scope's `commands/harness-lab/` directory. The namespace directory ensures slash commands are invoked as `/harness-lab:install`, `/harness-lab:categories`, etc.
 
 **Complexity:** L
 
 **Acceptance Criteria:**
-- [ ] Given user selects global, then slash commands are in ~/.claude/commands/
+- [ ] Given user selects global, then slash commands are in `~/.claude/commands/harness-lab/`
 - [ ] Given npm install -g succeeds, then `harness-lab` is available as global command
 - [ ] Given npm install -g fails, then helpful error about sudo is shown
 
@@ -206,7 +206,7 @@
 
 #### TASK-011: Slash command templates
 
-**Description:** Create 5 markdown files in templates/slash-commands/ that instruct Claude Code to run the corresponding CLI command. Each file needs proper frontmatter with description and arguments.
+**Description:** Create 5 markdown files in `templates/slash-commands/harness-lab/` (categories.md, list.md, install.md, uninstall.md, update.md) that instruct Claude Code to run the corresponding CLI command. Each file needs proper frontmatter with description and arguments. The directory structure `commands/harness-lab/<cmd>.md` produces the slash command format `/harness-lab:<cmd>`.
 
 **Complexity:** S
 

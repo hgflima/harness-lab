@@ -1,0 +1,13 @@
+{
+  "name": "product-vision-frame",
+  "version": "1.0.0",
+  "description": "Define a product's singular purpose and ruthlessly align all decisions to that vision, rejecting good ideas that do not serve the core.",
+  "categories": ["product"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": ["product-vision-frame"],
+    "commands": [],
+    "agents": [],
+    "hooks": []
+  }
+}

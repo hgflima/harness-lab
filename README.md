@@ -45,6 +45,7 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | **agent-md-writer** | Generate and maintain high-quality CLAUDE.md and AGENT.md files | hgflima |
 | **rules-generator** | Analyze a project's stack and generate tailored .claude/rules/ files | hgflima |
 | **github-readme-writer** | Generate comprehensive, professional README.md files for any project | alfredang |
+| **product-vision-frame** | Define a product's singular purpose and ruthlessly align all decisions to that vision | hgflima |
 
 ## Tech Stack
 
@@ -198,6 +199,7 @@ For questions and discussions, visit [GitHub Issues](https://github.com/hgflima/
 
 - [Anthropic](https://www.anthropic.com/) for Claude Code
 - [alfredang](https://github.com/alfredang) for the github-readme-writer harness
+- [sethmblack](https://github.com/sethmblack) for the product-vision-frame harness
 - All contributors who submit harnesses to the registry
 
 ---

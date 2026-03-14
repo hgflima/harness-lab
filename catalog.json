@@ -56,8 +56,17 @@
       "description": "A Claude Code skill that generates comprehensive, professional README.md files for any project",
       "categories": ["software-engineering"],
       "author": "alfredang",
-      "repository_url": "https://github.com/alfredang/skills/tree/main/readme",
+      "repository_url": "https://github.com/alfredang/skills",
       "path": "harnesses/github-readme-writer"
+    },
+    {
+      "name": "product-vision-frame",
+      "version": "1.0.0",
+      "description": "Define a product's singular purpose and ruthlessly align all decisions to that vision, rejecting good ideas that do not serve the core.",
+      "categories": ["product"],
+      "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/product-vision-frame",
+      "path": "harnesses/product-vision-frame"
     }
   ]
 }

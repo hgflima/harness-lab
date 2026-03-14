@@ -62,6 +62,13 @@ A single Markdown file per agent. The file name (without `.md`) is the agent slu
 ### Hooks
 Hook artifacts follow the convention defined by the harness author.
 
+### README.md (optional)
+
+A `README.md` file at the harness root (`harnesses/<name>/README.md`) is optional.
+Use it for additional information that does not belong in `harness.json` or artifact files,
+such as curation notes, attribution to original authors, analysis, or evolution history.
+The installer does NOT copy this file — it exists only in the registry for documentation purposes.
+
 ## Invariants
 
 1. `name` MUST equal the directory name: `harnesses/<name>/harness.json`.

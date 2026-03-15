@@ -67,6 +67,15 @@
       "author": "hgflima",
       "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/product-vision-frame",
       "path": "harnesses/product-vision-frame"
+    },
+    {
+      "name": "customer-journey-to-be",
+      "version": "1.0.0",
+      "description": "Generate to-be customer journey maps with phases, happy paths, exception flows, touchpoints, and Mermaid diagrams",
+      "categories": ["product", "design"],
+      "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/customer-journey-to-be",
+      "path": "harnesses/customer-journey-to-be"
     }
   ]
 }

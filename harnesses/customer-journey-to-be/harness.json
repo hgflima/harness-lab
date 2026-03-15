@@ -1,0 +1,13 @@
+{
+  "name": "customer-journey-to-be",
+  "version": "1.0.0",
+  "description": "Generate to-be customer journey maps with phases, happy paths, exception flows, touchpoints, and Mermaid diagrams for new or redesigned product features.",
+  "categories": ["product", "design"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": ["customer-journey-to-be"],
+    "commands": [],
+    "agents": [],
+    "hooks": []
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "eval_name": "wishlist-sharing-scope",
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "respects-scope: Journey is scoped to wishlist sharing and gift coordination only — does NOT include product browsing, cart, checkout, or general e-commerce flows",
+      "passed": true,
+      "evidence": "The overview explicitly states 'The scope intentionally excludes account creation, product browsing, catalog search, cart, checkout, and all other standard e-commerce flows.' All 7 phases focus on sharing, viewing shared wishlists, reserving items, managing reservations, monitoring progress, link management, and archival."
+    },
+    {
+      "text": "phase-count: Output contains between 3 and 6 phases",
+      "passed": false,
+      "evidence": "Output contains 7 phases: Phase 1 (Share the Wishlist), Phase 2 (Friend Receives and Opens), Phase 3 (Friend Marks an Item as Bought), Phase 4 (Friend Manages Their Reservations), Phase 5 (Owner Monitors Gift Progress), Phase 6 (Link Management and Access Control), Phase 7 (Wishlist Completion and Archival). This exceeds the maximum of 6."
+    },
+    {
+      "text": "multi-user: Journey addresses both the wishlist creator and the friend/recipient perspectives",
+      "passed": true,
+      "evidence": "The overview states 'Two personas interact throughout: the Wishlist Owner (who shares and monitors) and the Friend (who receives a link, browses items, and coordinates purchases).' Each phase explicitly labels the actor. Phases 1, 5, 6 focus on the Owner; Phases 2, 3, 4 on the Friend; Phase 7 addresses both."
+    },
+    {
+      "text": "has-happy-paths: Every phase has a 'Happy path' section with numbered steps",
+      "passed": true,
+      "evidence": "All 7 phases have a '**Happy path:**' section with numbered steps. Phase 1 has 5, Phase 2 has 5, Phase 3 has 5, Phase 4 has 4, Phase 5 has 4, Phase 6 has 3, Phase 7 has 4."
+    },
+    {
+      "text": "has-exceptions: Every phase has an 'Exceptions' section",
+      "passed": true,
+      "evidence": "All 7 phases have an '**Exceptions:**' section. Phase 1 has 3, Phase 2 has 4, Phase 3 has 3, Phase 4 has 3, Phase 5 has 4, Phase 6 has 3, Phase 7 has 3 exceptions."
+    },
+    {
+      "text": "has-mermaid: Output contains a valid Mermaid diagram",
+      "passed": true,
+      "evidence": "Output contains a ```mermaid code block starting with 'graph TD' at line 151, with a comprehensive flowchart covering all phases."
+    },
+    {
+      "text": "gift-coordination: Journey explicitly covers the 'mark as bought' deduplication mechanism",
+      "passed": true,
+      "evidence": "Phase 3 is titled 'Friend Marks an Item as Bought (Gift Reservation)' and covers the deduplication mechanism: step 4 says 'the item status immediately changes to Reserved by someone for all viewers.' The race condition exception states 'The server processes reservations sequentially; the first confirmation wins, and the second friend sees Someone just reserved this item.' Phase 4 covers managing reservations including releasing items."
+    },
+    {
+      "text": "no-dead-ends: All exception flows resolve",
+      "passed": true,
+      "evidence": "All exceptions provide resolution paths: invalid link -> 'clear error page with a link to the store homepage'; race condition -> 'returned to the list'; all items reserved -> 'link to the store homepage for other gift ideas'; friend changes mind -> 'taps Release Item...item returns to Available'; owner removes reserved item -> 'friend who reserved it sees a notification'; owner accidentally stops sharing -> 'can tap Resume Sharing'."
+    }
+  ]
+}

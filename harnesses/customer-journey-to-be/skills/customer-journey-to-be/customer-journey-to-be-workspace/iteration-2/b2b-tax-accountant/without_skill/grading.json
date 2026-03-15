@@ -1,0 +1,46 @@
+{
+  "eval_name": "b2b-tax-accountant",
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "has-phases: Output contains between 4 and 8 clearly labeled phases",
+      "passed": true,
+      "evidence": "Output contains 6 clearly labeled stages: Stage 1 (Onboarding & First Login), Stage 2 (Client & Document Management), Stage 3 (Automated Data Extraction & Pre-Fill), Stage 4 (Review & Correction), Stage 5 (Submission to Tax Authority), Stage 6 (Post-Submission & Ongoing Management)."
+    },
+    {
+      "text": "has-happy-paths: Every phase has a 'Happy path' section with numbered steps",
+      "passed": false,
+      "evidence": "None of the 6 stages have a 'Happy path' section. Instead, each stage uses a table format with dimensions (Trigger, Actions, Touchpoints, Thoughts, Emotions, Pain Points, Opportunities). The 'Actions' field contains numbered steps but it is not labeled 'Happy path'."
+    },
+    {
+      "text": "has-exceptions: Every phase has an 'Exceptions' section with at least one exception",
+      "passed": false,
+      "evidence": "None of the 6 stages have an 'Exceptions' section. Instead, each stage has a 'Pain Points' row in the table describing potential issues, but these are not structured as exception flows with resolution paths."
+    },
+    {
+      "text": "has-mermaid: Output contains a valid Mermaid diagram (```mermaid code block with graph TD or graph LR)",
+      "passed": false,
+      "evidence": "The output contains a visual overview diagram using a plain text code block (``` without mermaid), not a Mermaid diagram. It is an ASCII art representation of the journey stages, not a ```mermaid code block with graph TD or graph LR."
+    },
+    {
+      "text": "persona-focus: Journey focuses on the accountant persona, not the firm admin",
+      "passed": true,
+      "evidence": "The document is titled 'Customer Journey Map: Accountant Persona' and the persona section explicitly describes 'Staff accountant at a small firm (1-10 accountants).' All stages are from the accountant's perspective."
+    },
+    {
+      "text": "user-facing-steps: Steps describe what the user sees/does, not system internals",
+      "passed": true,
+      "evidence": "Actions describe user-facing activities: 'Receives invitation email with a sign-up link', 'Creates password and sets up profile', 'Navigates to the client list', 'Opens the pre-filled tax form workspace', 'Previews the final tax return in its official format'. Some system internals are mentioned but in context of what the user experiences."
+    },
+    {
+      "text": "no-dead-ends: All exception flows resolve",
+      "passed": false,
+      "evidence": "There are no formal exception flows to evaluate. The 'Pain Points' sections identify problems but do not provide resolution paths. The 'Opportunities' sections suggest improvements but are not structured as exception resolution flows. For example, 'Invitation may land in spam' is listed as a pain point but no recovery step is described."
+    },
+    {
+      "text": "has-overview: Output starts with an Overview section",
+      "passed": false,
+      "evidence": "The output starts with '## Product Context' followed by '## Persona: Accountant', then '## Journey Stages'. There is no section titled 'Overview'. The Product Context section serves a similar purpose but is not labeled 'Overview'."
+    }
+  ]
+}

@@ -65,5 +65,6 @@ No build step. No transpilation. Edit and run.
 
 ## Rules Reference
 
+- [Harness Lifecycle](.claude/rules/harness-lifecycle.md) — End-to-end process for creating, importing (`/hlab:import`), and registering harnesses. Includes the 4-file checklist and sync invariants.
 - [catalog.json contract](.claude/rules/catalog-json-contract.md) — JSON schema and invariants for the root `catalog.json` registry file.
 - [harness.json contract](.claude/rules/harness-json-contract.md) — JSON schema and invariants for `harnesses/<name>/harness.json` manifest files.

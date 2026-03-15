@@ -46,6 +46,7 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | **rules-generator** | Analyze a project's stack and generate tailored .claude/rules/ files | hgflima |
 | **github-readme-writer** | Generate comprehensive, professional README.md files for any project | alfredang |
 | **product-vision-frame** | Define a product's singular purpose and ruthlessly align all decisions to that vision | hgflima |
+| **customer-journey-to-be** | Generate to-be customer journey maps with phases, happy paths, exception flows, and Mermaid diagrams | hgflima |
 
 ## Tech Stack
 

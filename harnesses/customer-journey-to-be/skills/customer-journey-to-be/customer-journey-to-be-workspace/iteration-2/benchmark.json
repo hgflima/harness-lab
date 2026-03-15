@@ -1,0 +1,184 @@
+{
+  "metadata": {
+    "skill_name": "customer-journey-to-be",
+    "skill_path": "/Users/henriquelima/Documents/dev/personal/harness-lab/harnesses/customer-journey-to-be/skills/customer-journey-to-be",
+    "executor_model": "claude-opus-4-6",
+    "timestamp": "2026-03-15T13:10:00Z",
+    "evals_run": [0, 1, 2],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "eval_name": "b2b-tax-accountant",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 68.7,
+        "tokens": 18266,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "has-phases: Output contains between 4 and 8 clearly labeled phases", "passed": true, "evidence": "7 phases found"},
+        {"text": "has-happy-paths: Every phase has a 'Happy path' section with numbered steps", "passed": true, "evidence": "All 7 phases have Happy path sections"},
+        {"text": "has-exceptions: Every phase has an 'Exceptions' section with at least one exception", "passed": true, "evidence": "All 7 phases have Exceptions sections"},
+        {"text": "has-mermaid: Output contains a valid Mermaid diagram", "passed": true, "evidence": "graph TD mermaid block present"},
+        {"text": "persona-focus: Journey focuses on the accountant persona, not the firm admin", "passed": true, "evidence": "All steps from accountant perspective"},
+        {"text": "user-facing-steps: Steps describe what the user sees/does, not system internals", "passed": true, "evidence": "Steps describe user actions and visible UI"},
+        {"text": "no-dead-ends: All exception flows resolve", "passed": true, "evidence": "All exceptions provide resolution paths"},
+        {"text": "has-overview: Output starts with an Overview section", "passed": true, "evidence": "Overview section at start of document"}
+      ]
+    },
+    {
+      "eval_id": 0,
+      "eval_name": "b2b-tax-accountant",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.375,
+        "passed": 3,
+        "failed": 5,
+        "total": 8,
+        "time_seconds": 80.7,
+        "tokens": 15241,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "has-phases: Output contains between 4 and 8 clearly labeled phases", "passed": true, "evidence": "6 stages found"},
+        {"text": "has-happy-paths: Every phase has a 'Happy path' section with numbered steps", "passed": false, "evidence": "Uses table format with Actions dimension instead of Happy path sections"},
+        {"text": "has-exceptions: Every phase has an 'Exceptions' section with at least one exception", "passed": false, "evidence": "Uses Pain Points rows instead of Exceptions sections"},
+        {"text": "has-mermaid: Output contains a valid Mermaid diagram", "passed": false, "evidence": "ASCII art diagram, not Mermaid"},
+        {"text": "persona-focus: Journey focuses on the accountant persona, not the firm admin", "passed": true, "evidence": "Title and all stages from accountant perspective"},
+        {"text": "user-facing-steps: Steps describe what the user sees/does, not system internals", "passed": true, "evidence": "Actions describe user-facing activities"},
+        {"text": "no-dead-ends: All exception flows resolve", "passed": false, "evidence": "Pain points identify problems without resolution paths"},
+        {"text": "has-overview: Output starts with an Overview section", "passed": false, "evidence": "Starts with Product Context, not Overview"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "wishlist-sharing-scope",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 67.8,
+        "tokens": 18174,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "respects-scope: Scoped to wishlist sharing and gift coordination only", "passed": true, "evidence": "No product browsing, cart, or checkout flows"},
+        {"text": "phase-count: Output contains between 3 and 6 phases", "passed": true, "evidence": "6 phases found"},
+        {"text": "multi-user: Journey addresses both creator and friend perspectives", "passed": true, "evidence": "Both Wishlist Owner and Friend personas covered"},
+        {"text": "has-happy-paths: Every phase has a 'Happy path' section with numbered steps", "passed": true, "evidence": "All 6 phases have Happy path sections"},
+        {"text": "has-exceptions: Every phase has an 'Exceptions' section", "passed": true, "evidence": "All 6 phases have Exceptions sections"},
+        {"text": "has-mermaid: Output contains a valid Mermaid diagram", "passed": true, "evidence": "graph TD mermaid block present"},
+        {"text": "gift-coordination: Journey covers 'mark as bought' deduplication", "passed": true, "evidence": "Phase 3 dedicated to Mark as Bought with race condition handling"},
+        {"text": "no-dead-ends: All exception flows resolve", "passed": true, "evidence": "All exceptions provide resolution paths"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "wishlist-sharing-scope",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.875,
+        "passed": 7,
+        "failed": 1,
+        "total": 8,
+        "time_seconds": 85.0,
+        "tokens": 21487,
+        "tool_calls": 7,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "respects-scope: Scoped to wishlist sharing and gift coordination only", "passed": true, "evidence": "Scope explicitly excludes general e-commerce"},
+        {"text": "phase-count: Output contains between 3 and 6 phases", "passed": false, "evidence": "7 phases found, exceeding max of 6"},
+        {"text": "multi-user: Journey addresses both creator and friend perspectives", "passed": true, "evidence": "Both Owner and Friend personas with actor labels"},
+        {"text": "has-happy-paths: Every phase has a 'Happy path' section with numbered steps", "passed": true, "evidence": "All 7 phases have Happy path sections"},
+        {"text": "has-exceptions: Every phase has an 'Exceptions' section", "passed": true, "evidence": "All 7 phases have Exceptions sections"},
+        {"text": "has-mermaid: Output contains a valid Mermaid diagram", "passed": true, "evidence": "graph TD mermaid block present"},
+        {"text": "gift-coordination: Journey covers 'mark as bought' deduplication", "passed": true, "evidence": "Phase 3 covers Gift Reservation with race condition"},
+        {"text": "no-dead-ends: All exception flows resolve", "passed": true, "evidence": "All exceptions provide resolution paths"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "vague-input",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 74.3,
+        "tokens": 18590,
+        "tool_calls": 7,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "asks-clarification: Asks clarifying questions instead of generating a full journey map", "passed": false, "evidence": "Generates a full 5-phase journey map despite noting input was vague"},
+        {"text": "no-invented-product: Does NOT invent a product concept", "passed": false, "evidence": "Invents generic product features: sign-up, notifications, paywalls, support"},
+        {"text": "asks-about-product: Clarifying questions include what the app does", "passed": true, "evidence": "Note asks 'What the app does'"},
+        {"text": "asks-about-users: Clarifying questions include who the target users are", "passed": true, "evidence": "Note asks 'Who the primary user is'"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "vague-input",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 42.3,
+        "tokens": 14132,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "asks-clarification: Asks clarifying questions instead of generating a full journey map", "passed": false, "evidence": "Generates full 8-stage template journey map"},
+        {"text": "no-invented-product: Does NOT invent a product concept", "passed": false, "evidence": "Assumes consumer mobile app with app store, notifications, referrals"},
+        {"text": "asks-about-product: Clarifying questions include what the app does", "passed": true, "evidence": "Key Gaps asks 'What does it do?'"},
+        {"text": "asks-about-users: Clarifying questions include who the target users are", "passed": true, "evidence": "Key Gaps asks about persona demographics and goals"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.833, "stddev": 0.236, "min": 0.5, "max": 1.0},
+      "time_seconds": {"mean": 70.3, "stddev": 2.8, "min": 67.8, "max": 74.3},
+      "tokens": {"mean": 18343, "stddev": 171, "min": 18174, "max": 18590}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.583, "stddev": 0.214, "min": 0.375, "max": 0.875},
+      "time_seconds": {"mean": 69.3, "stddev": 18.5, "min": 42.3, "max": 85.0},
+      "tokens": {"mean": 16953, "stddev": 3186, "min": 14132, "max": 21487}
+    },
+    "delta": {
+      "pass_rate": "+0.250",
+      "time_seconds": "+1.0",
+      "tokens": "+1390"
+    }
+  },
+  "notes": [
+    "The skill's biggest advantage is in structural consistency: with_skill outputs always follow the exact Happy path / Exceptions / Mermaid format, while without_skill outputs use varied formats (tables, ASCII art, different section names).",
+    "The vague-input test case shows a weakness: both with_skill and without_skill generate a full journey map instead of just asking for clarification. The skill adds a note with clarifying questions but still generates content — the Error Handling instruction to 'ask the user' is not being followed strictly.",
+    "Non-discriminating assertions: 'asks-about-product' and 'asks-about-users' pass in both configurations — both approaches mention the need for more information, they just differ in whether they stop or proceed.",
+    "The wishlist eval shows the without_skill baseline is surprisingly strong (7/8), suggesting Claude already has good journey-mapping capabilities. The skill primarily adds format discipline (phase count constraint) and prevents scope creep.",
+    "Token usage is similar across configurations — the skill does not significantly increase cost."
+  ]
+}

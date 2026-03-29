@@ -1,0 +1,13 @@
+{
+  "name": "lessons-learned",
+  "version": "1.0.0",
+  "description": "Post-incident analysis and correction skill for Claude Code sessions. Diagnoses root causes, applies corrective fixes to skills/rules/CLAUDE.md, and persists a structured changelog.",
+  "categories": ["software-engineering"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": ["lessons-learned"],
+    "commands": [],
+    "agents": [],
+    "hooks": []
+  }
+}

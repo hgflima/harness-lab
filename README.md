@@ -47,6 +47,7 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | **github-readme-writer** | Generate comprehensive, professional README.md files for any project | alfredang |
 | **product-vision-frame** | Define a product's singular purpose and ruthlessly align all decisions to that vision | hgflima |
 | **customer-journey-to-be** | Generate to-be customer journey maps with phases, happy paths, exception flows, and Mermaid diagrams | hgflima |
+| **lessons-learned** | Post-incident analysis and correction for Claude Code sessions — diagnoses root causes, applies fixes, and persists structured changelogs | hgflima |
 
 ## Tech Stack
 

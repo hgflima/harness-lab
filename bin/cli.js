@@ -30,7 +30,7 @@ if (!command) {
   });
 } else if (command === '--help' || command === '-h') {
   console.log(`
-  harness-lab v1.0.0
+  harness-lab v1.0.1
 
   Usage:
     harness-lab init                    Install slash commands (global/project/local)

@@ -20,7 +20,7 @@ function prompt(question) {
 }
 
 export async function init(_args) {
-  console.log('\n  harness-lab v1.0.0\n');
+  console.log('\n  harness-lab v1.0.1\n');
 
   // Step 1: Install CLI globally
   console.log('  1. Installing CLI globally...');

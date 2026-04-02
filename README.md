@@ -131,7 +131,7 @@ harness-lab/
 ### Install
 
 ```bash
-npm install -g harness-lab@1.0.0
+npm install -g harness-lab@latest
 ```
 
 Then install the slash commands for Claude Code:
@@ -181,14 +181,14 @@ If you prefer not to install globally, use `npx` to run any command directly:
 
 ```bash
 # Install globally + slash commands
-npx harness-lab@1.0.0
+npx harness-lab@latest
 
 # Browse and install
-npx harness-lab@1.0.0 categories
-npx harness-lab@1.0.0 list software-engineering
-npx harness-lab@1.0.0 install prd-generator --scope project
-npx harness-lab@1.0.0 uninstall prd-generator
-npx harness-lab@1.0.0 update
+npx harness-lab@latest categories
+npx harness-lab@latest list software-engineering
+npx harness-lab@latest install prd-generator --scope project
+npx harness-lab@latest uninstall prd-generator
+npx harness-lab@latest update
 ```
 
 ## Contributing

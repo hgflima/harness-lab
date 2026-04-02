@@ -1,4 +1,6 @@
 
+.harn/
+*.harn
 # ── GSD baseline (auto-generated) ──
 .gsd/activity/
 .gsd/runtime/

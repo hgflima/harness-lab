@@ -70,6 +70,16 @@ export async function installHarness(harnessName, harnessPath, scope) {
     installed.push(`agent: ${agentName}`);
   }
 
+  // Install directories (shared resources like templates, adapters, references)
+  if (harness.artifacts.directories) {
+    for (const dirName of harness.artifacts.directories) {
+      const remotePath = `${harnessPath}/${dirName}`;
+      const localPath = join(target, dirName);
+      await downloadDirectory(repoBase, remotePath, localPath);
+      installed.push(`directory: ${dirName}`);
+    }
+  }
+
   return installed;
 }
 
@@ -90,10 +100,32 @@ export async function uninstallHarness(harnessName, harnessPath, scope) {
     removed.push(`command: ${cmdName}`);
   }
 
+  // Clean up empty namespace directories left by commands (e.g. commands/ui/)
+  const cmdNamespaces = new Set(
+    harness.artifacts.commands
+      .filter(c => c.includes('/'))
+      .map(c => join(target, 'commands', c.split('/')[0]))
+  );
+  for (const nsDir of cmdNamespaces) {
+    try {
+      const entries = await readdir(nsDir);
+      if (entries.length === 0) await rm(nsDir, { recursive: true, force: true });
+    } catch {}
+  }
+
   for (const agentName of harness.artifacts.agents) {
     const localPath = join(target, 'agents', `${agentName}.md`);
     await rm(localPath, { force: true });
     removed.push(`agent: ${agentName}`);
+  }
+
+  // Uninstall directories
+  if (harness.artifacts.directories) {
+    for (const dirName of harness.artifacts.directories) {
+      const localPath = join(target, dirName);
+      await rm(localPath, { recursive: true, force: true });
+      removed.push(`directory: ${dirName}`);
+    }
   }
 
   return removed;

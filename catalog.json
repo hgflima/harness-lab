@@ -94,6 +94,15 @@
       "author": "hgflima",
       "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/product-brief",
       "path": "harnesses/product-brief"
+    },
+    {
+      "name": "ui-design",
+      "version": "0.6.1",
+      "description": "Service-agnostic UI/UX specification system — design tokens, screen specs, component definitions, and multi-tool export",
+      "categories": ["design"],
+      "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/ui-design",
+      "path": "harnesses/ui-design"
     }
   ]
 }

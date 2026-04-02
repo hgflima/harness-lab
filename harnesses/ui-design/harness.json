@@ -1,0 +1,44 @@
+{
+  "name": "ui-design",
+  "version": "0.6.1",
+  "description": "Service-agnostic UI/UX specification system for Claude Code — design tokens, screen specs, component definitions, and multi-tool export (Figma, V0, Stitch, Pencil)",
+  "categories": ["design"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": [],
+    "commands": [
+      "ui/init",
+      "ui/scan",
+      "ui/setup-tokens",
+      "ui/patterns",
+      "ui/define-components",
+      "ui/design-screens",
+      "ui/generate-specs",
+      "ui/pencil",
+      "ui/export",
+      "ui/import-design",
+      "ui/import-tokens",
+      "ui/reverse-engineer",
+      "ui/sync",
+      "ui/realize",
+      "ui/logo",
+      "ui/status",
+      "ui/decisions",
+      "ui/whats-new",
+      "ui/help"
+    ],
+    "agents": [
+      "ui-designer",
+      "ui-specifier",
+      "ui-prompter",
+      "ui-brander",
+      "ui-researcher",
+      "ui-scanner",
+      "ui-pencil-screen"
+    ],
+    "hooks": [],
+    "directories": [
+      "ui-design"
+    ]
+  }
+}

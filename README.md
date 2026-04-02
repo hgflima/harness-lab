@@ -49,6 +49,7 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | **customer-journey-to-be** | Generate to-be customer journey maps with phases, happy paths, exception flows, and Mermaid diagrams | hgflima |
 | **lessons-learned** | Post-incident analysis and correction for Claude Code sessions — diagnoses root causes, applies fixes, and persists structured changelogs | hgflima |
 | **product-brief** | Interactive wizard for creating structured product briefs across project levels (spike, POC, MVP, feature, product, platform) | hgflima |
+| **ui-design** | Service-agnostic UI/UX specification system — design tokens, screen specs, component definitions, and multi-tool export | hgflima |
 
 ## Tech Stack
 

@@ -8,6 +8,12 @@ arguments:
 
 Run the following command and show the output to the user:
 
+If a category argument was provided:
 ```bash
 harness-lab list $ARGUMENTS.category
+```
+
+If no category argument was provided, run without filtering:
+```bash
+harness-lab list
 ```

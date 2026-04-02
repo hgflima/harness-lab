@@ -34,6 +34,14 @@ describe('slash command templates (E2E-009)', () => {
     assert.ok(content.includes('harness-lab list'));
   });
 
+  it('list.md uses conditional blocks for optional category argument', async () => {
+    const content = await readFile(join(TEMPLATES_DIR, 'list.md'), 'utf-8');
+    assert.ok(
+      content.includes('harness-lab list\n'),
+      'list.md must include a bare "harness-lab list" block without arguments'
+    );
+  });
+
   it('categories.md references "harness-lab categories"', async () => {
     const content = await readFile(join(TEMPLATES_DIR, 'categories.md'), 'utf-8');
     assert.ok(content.includes('harness-lab categories'));

@@ -25,9 +25,9 @@ describe('E2E: browsing commands', { timeout: 30_000 }, () => {
       }
       const { stdout } = result;
       assert.ok(stdout.includes('product'));
-      assert.ok(stdout.includes('planning'));
-      assert.ok(stdout.includes('harness'));
-      assert.ok(stdout.includes('developer-experience'));
+      assert.ok(stdout.includes('harness-engineering'));
+      assert.ok(stdout.includes('software-engineering'));
+      assert.ok(stdout.includes('design'));
     });
   });
 

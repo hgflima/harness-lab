@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "harness-lab": "./bin/cli.js"
+    "harness-lab": "bin/cli.js"
   },
   "files": [
     "bin/",
@@ -25,7 +25,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hgflima/harness-lab.git"
+    "url": "git+https://github.com/hgflima/harness-lab.git"
   },
   "scripts": {
     "test": "node --test 'test/**/*.test.js'"

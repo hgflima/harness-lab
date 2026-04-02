@@ -23,7 +23,12 @@ const COMMANDS = {
 const command = process.argv[2];
 const args = process.argv.slice(3);
 
-if (!command || command === '--help' || command === '-h') {
+if (!command) {
+  init(args).catch((err) => {
+    console.error(err.message);
+    process.exit(1);
+  });
+} else if (command === '--help' || command === '-h') {
   console.log(`
   harness-lab v1.0.0
 
@@ -41,22 +46,20 @@ if (!command || command === '--help' || command === '-h') {
     --version, -v                       Show version
   `);
   process.exit(0);
-}
-
-if (command === '--version' || command === '-v') {
+} else if (command === '--version' || command === '-v') {
   console.log('1.0.0');
   process.exit(0);
+} else {
+  const handler = COMMANDS[command];
+
+  if (!handler) {
+    console.error(`Unknown command: ${command}`);
+    console.error('Run "harness-lab --help" for usage.');
+    process.exit(1);
+  }
+
+  handler(args).catch((err) => {
+    console.error(err.message);
+    process.exit(1);
+  });
 }
-
-const handler = COMMANDS[command];
-
-if (!handler) {
-  console.error(`Unknown command: ${command}`);
-  console.error('Run "harness-lab --help" for usage.');
-  process.exit(1);
-}
-
-handler(args).catch((err) => {
-  console.error(err.message);
-  process.exit(1);
-});

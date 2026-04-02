@@ -85,6 +85,15 @@
       "author": "hgflima",
       "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/lessons-learned",
       "path": "harnesses/lessons-learned"
+    },
+    {
+      "name": "product-brief",
+      "version": "1.0.0",
+      "description": "Interactive wizard for creating structured product briefs across project levels (spike, POC, MVP, feature, product, platform)",
+      "categories": ["product"],
+      "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/product-brief",
+      "path": "harnesses/product-brief"
     }
   ]
 }

@@ -25,8 +25,7 @@ export async function init(_args) {
   // Step 1: Install CLI globally
   console.log('  1. Installing CLI globally...');
   try {
-    const pkgRoot = join(__dirname, '..', '..');
-    execSync(`npm install -g "${pkgRoot}"`, { stdio: 'pipe' });
+    execSync(`npm install -g harness-lab`, { stdio: 'pipe' });
     console.log('     ✓ harness-lab command available\n');
   } catch (err) {
     console.error('     ✗ Failed to install globally. You may need to run with sudo.');

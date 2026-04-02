@@ -48,6 +48,7 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | **product-vision-frame** | Define a product's singular purpose and ruthlessly align all decisions to that vision | hgflima |
 | **customer-journey-to-be** | Generate to-be customer journey maps with phases, happy paths, exception flows, and Mermaid diagrams | hgflima |
 | **lessons-learned** | Post-incident analysis and correction for Claude Code sessions — diagnoses root causes, applies fixes, and persists structured changelogs | hgflima |
+| **product-brief** | Interactive wizard for creating structured product briefs across project levels (spike, POC, MVP, feature, product, platform) | hgflima |
 
 ## Tech Stack
 
@@ -127,60 +128,67 @@ harness-lab/
 
 - [Node.js](https://nodejs.org/) >= 18.0.0
 
-### Option A: Run with npx (no install needed)
-
-Run any CLI command directly via `npx` — no global install, no permissions required:
+### Install
 
 ```bash
-npx github:hgflima/harness-lab@latest categories
-npx github:hgflima/harness-lab@latest list software-engineering
-npx github:hgflima/harness-lab@latest install prd-generator --scope project
+npm install -g harness-lab@1.0.0
 ```
 
-### Option B: Global Install
-
-Install once for a shorter command:
+Then install the slash commands for Claude Code:
 
 ```bash
-# Via npx (installs globally + copies slash commands)
-npx github:hgflima/harness-lab@latest
-
-# Or clone and install manually
-git clone https://github.com/hgflima/harness-lab.git
-cd harness-lab
-npm install -g .
+harness-lab init
 ```
 
-### Usage
+The `init` wizard asks where to place the slash commands (global, project, or local) and copies them into your `.claude/commands/` directory.
+
+### CLI Commands
 
 ```bash
-# With npx (no global install)
-npx github:hgflima/harness-lab@latest categories
-npx github:hgflima/harness-lab@latest list software-engineering
-npx github:hgflima/harness-lab@latest install prd-generator --scope project
-npx github:hgflima/harness-lab@latest uninstall prd-generator
-npx github:hgflima/harness-lab@latest update
-npx github:hgflima/harness-lab@latest update prd-generator
-
-# With global install
-harness-lab categories
-harness-lab list software-engineering
-harness-lab install prd-generator --scope project
-harness-lab uninstall prd-generator
-harness-lab update
-harness-lab update prd-generator
+harness-lab                          # Run init (install slash commands)
+harness-lab categories               # List available categories
+harness-lab list [category]          # List harnesses, optionally by category
+harness-lab install <name>           # Install a harness (default scope: project)
+harness-lab uninstall <name>         # Uninstall a harness
+harness-lab update [name]            # Update one or all harnesses
+harness-lab --version                # Show version
+harness-lab --help                   # Show help
 ```
 
-### Using with Claude Code Slash Commands
+Use `--scope` to control where artifacts are installed:
 
-After running `harness-lab init`, you get slash commands inside Claude Code:
+```bash
+harness-lab install prd-generator --scope global    # ~/.claude/
+harness-lab install prd-generator --scope project   # .claude/ (default)
+harness-lab install prd-generator --scope local     # .claude/local/
+```
+
+### Slash Commands
+
+After running `harness-lab init`, these commands are available inside Claude Code:
 
 ```
-/harness-lab:categories     — List available categories
-/harness-lab:list           — List harnesses
-/harness-lab:install        — Install a harness
-/harness-lab:uninstall      — Uninstall a harness
-/harness-lab:update         — Update harnesses
+/harness-lab:categories     List available categories
+/harness-lab:list           List harnesses
+/harness-lab:install        Install a harness
+/harness-lab:uninstall      Uninstall a harness
+/harness-lab:update         Update harnesses
+```
+
+### Alternative: Run with npx
+
+If you prefer not to install globally, use `npx` to run any command directly:
+
+```bash
+# Install globally + slash commands
+npx harness-lab@1.0.0
+
+# Browse and install
+npx harness-lab@1.0.0 categories
+npx harness-lab@1.0.0 list software-engineering
+npx harness-lab@1.0.0 install prd-generator --scope project
+npx harness-lab@1.0.0 uninstall prd-generator
+npx harness-lab@1.0.0 update
 ```
 
 ## Contributing

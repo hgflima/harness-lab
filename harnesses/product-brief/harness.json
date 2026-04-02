@@ -1,0 +1,13 @@
+{
+  "name": "product-brief",
+  "version": "1.0.0",
+  "description": "Interactive wizard that guides users through structured product brief creation for spikes, POCs, MVPs, features, products, and platforms",
+  "categories": ["product"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": ["product-brief"],
+    "commands": [],
+    "agents": [],
+    "hooks": []
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "harness-lab",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Curated collection of AI agent harnesses for Claude Code. Install, manage, and share skills, commands, agents, and hooks.",
   "author": "hgflima",
   "license": "MIT",

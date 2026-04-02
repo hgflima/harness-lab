@@ -3,13 +3,19 @@
 // harness-lab CLI
 // Entry point for both terminal usage and slash command delegation
 
-import { parseArgs } from 'node:util';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { init } from '../src/setup/init.js';
 import { categories } from '../src/cli/categories.js';
 import { list } from '../src/cli/list.js';
 import { install } from '../src/cli/install.js';
 import { uninstall } from '../src/cli/uninstall.js';
 import { update } from '../src/cli/update.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
+const VERSION = pkg.version;
 
 const COMMANDS = {
   init,
@@ -30,7 +36,7 @@ if (!command) {
   });
 } else if (command === '--help' || command === '-h') {
   console.log(`
-  harness-lab v1.0.1
+  harness-lab v${VERSION}
 
   Usage:
     harness-lab init                    Install slash commands (global/project/local)
@@ -47,7 +53,7 @@ if (!command) {
   `);
   process.exit(0);
 } else if (command === '--version' || command === '-v') {
-  console.log('1.0.0');
+  console.log(VERSION);
   process.exit(0);
 } else {
   const handler = COMMANDS[command];

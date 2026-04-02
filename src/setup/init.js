@@ -7,7 +7,10 @@ import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline';
 import { resolveTarget } from '../core/scope.js';
 
+import { readFileSync } from 'node:fs';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf-8'));
 
 function prompt(question) {
   const rl = createInterface({ input: process.stdin, output: process.stdout });
@@ -20,7 +23,7 @@ function prompt(question) {
 }
 
 export async function init(_args) {
-  console.log('\n  harness-lab v1.0.1\n');
+  console.log(`\n  harness-lab v${pkg.version}\n`);
 
   // Step 1: Install CLI globally
   console.log('  1. Installing CLI globally...');

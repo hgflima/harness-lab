@@ -24,7 +24,6 @@
       "ui/logo",
       "ui/status",
       "ui/decisions",
-      "ui/whats-new",
       "ui/help"
     ],
     "agents": [

@@ -103,6 +103,15 @@
       "author": "hgflima",
       "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/ui-design",
       "path": "harnesses/ui-design"
+    },
+    {
+      "name": "parallel-plan-runner",
+      "version": "1.0.0",
+      "description": "Execute an implementation plan via Claude Code's experimental Agent Teams — parallelization analysis, teammate spawn, orchestration, and audit",
+      "categories": ["harness-engineering", "software-engineering"],
+      "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/parallel-plan-runner",
+      "path": "harnesses/parallel-plan-runner"
     }
   ]
 }

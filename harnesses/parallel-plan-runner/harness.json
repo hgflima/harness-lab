@@ -1,0 +1,13 @@
+{
+  "name": "parallel-plan-runner",
+  "version": "1.0.0",
+  "description": "6-step wizard that executes an implementation plan via Claude Code's experimental Agent Teams feature. Analyzes parallelization, spawns teammates, orchestrates SendMessage-based communication, and audits the diff against the plan.",
+  "categories": ["harness-engineering", "software-engineering"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": ["parallel-plan-runner"],
+    "commands": [],
+    "agents": [],
+    "hooks": []
+  }
+}

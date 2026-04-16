@@ -1,8 +1,8 @@
 {
   "name": "prd-generator",
-  "version": "1.0.0",
-  "description": "Context engineering PRD generator for AI-driven software development. Creates structured context artifacts (user stories, E2E test specs, architecture, agent-assignable tasks with parallel execution lanes) for AI agents.",
-  "categories": ["product", "planning"],
+  "version": "1.1.0",
+  "description": "Context engineering PRD generator for AI-driven software development. Ingests existing context (briefings, journey maps, wireframes, screenshots) before interviewing, drives a deep architectural discovery, then dispatches subagents in parallel waves to generate structured artifacts (user stories, E2E test specs, architecture, agent-assignable tasks with parallel execution lanes) — with E2E specs guaranteed at every detail level.",
+  "categories": ["product", "software-engineering"],
   "author": "hgflima",
   "artifacts": {
     "skills": ["prd-generator"],

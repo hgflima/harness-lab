@@ -1,8 +1,16 @@
 # Templates: E2E Test Specifications
 
-Use this template when generating `requirements/05-e2e-test-specs.md`.
+Use this template when generating `requirements/05-e2e-test-specs.md` (Standard / Enterprise) **or** `requirements/02-e2e-test-specs.md` (Lite).
 
 **This is the PRIMARY VERIFICATION ARTIFACT of the entire PRD.** In AI-driven development, this file determines whether the software works. It provides a direct, traceable mapping from every user story to its E2E test specification. The tester-agent (which must be a different agent from the coder-agent) reads this file and writes complete E2E tests without access to the implementation code. If the coder-agent's implementation passes the tester-agent's tests, the feature works. If not, the coder-agent iterates. This independent verification loop is the quality guarantee.
+
+## Adapting to PRD level
+
+This template scales by depth, never by skipping:
+
+- **Lite PRDs:** keep the file but trim aggressively. A single Given/When/Then per user story is enough — you can skip the coverage matrix, fixture tables and cross-journey tests. The non-negotiable part is the 1:1 mapping between every user story in `01-overview-and-stories.md` and at least one test below. If you find yourself wanting to drop the file entirely, you are about to break the coder-agent ↔ tester-agent contract — push back instead.
+- **Standard PRDs:** use the full template below.
+- **Enterprise PRDs:** full template plus compliance-driven tests (audit trail verification, data residency checks, sign-off gates).
 
 ---
 

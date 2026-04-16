@@ -34,8 +34,8 @@
     },
     {
       "name": "agent-md-writer",
-      "version": "1.0.0",
-      "description": "Generate and maintain high-quality CLAUDE.md and AGENT.md files",
+      "version": "1.2.0",
+      "description": "Generate and maintain CLAUDE.md / AGENTS.md files with Karpathy principles, context7-first docs lookup, DESIGN.md consultation, and 3 slash commands (/agent-md:create, /agent-md:update, /agent-md:audit) with parallel detection",
       "categories": ["harness-engineering"],
       "author": "hgflima",
       "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/agent-md-writer",

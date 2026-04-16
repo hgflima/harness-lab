@@ -1,12 +1,16 @@
 {
   "name": "agent-md-writer",
-  "version": "1.0.0",
-  "description": "Generate and maintain high-quality CLAUDE.md and AGENT.md files for any project. Onboards code agents to a codebase with progressive disclosure and best practices.",
+  "version": "1.2.0",
+  "description": "Generate and maintain high-quality CLAUDE.md and AGENTS.md files for any project. Every generated file includes Karpathy-inspired behavior principles, and when detected, context7-first docs lookup and DESIGN.md consultation for UI generation. Handles legacy AGENT.md → AGENTS.md migration. Ships 3 imperative slash commands (/agent-md:create, /agent-md:update, /agent-md:audit) that parallelize filesystem detection via Explore subagents to protect the main context window.",
   "categories": ["harness", "developer-experience"],
   "author": "hgflima",
   "artifacts": {
     "skills": ["agent-md-writer"],
-    "commands": [],
+    "commands": [
+      "agent-md/create",
+      "agent-md/update",
+      "agent-md/audit"
+    ],
     "agents": [],
     "hooks": []
   }

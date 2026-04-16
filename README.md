@@ -42,7 +42,7 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | Harness | Description | Author |
 |---------|-------------|--------|
 | **prd-generator** | Context engineering PRD generator for AI-driven software development | hgflima |
-| **agent-md-writer** | Generate and maintain high-quality CLAUDE.md and AGENT.md files | hgflima |
+| **agent-md-writer** | Generate and maintain CLAUDE.md / AGENTS.md files with Karpathy principles, context7-first docs, DESIGN.md consultation, and parallelized `/agent-md:create`, `/agent-md:update`, `/agent-md:audit` commands | hgflima |
 | **rules-generator** | Analyze a project's stack and generate tailored .claude/rules/ files | hgflima |
 | **github-readme-writer** | Generate comprehensive, professional README.md files for any project | alfredang |
 | **product-vision-frame** | Define a product's singular purpose and ruthlessly align all decisions to that vision | hgflima |

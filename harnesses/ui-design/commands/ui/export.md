@@ -1,13 +1,13 @@
 ---
 name: ui:export
 description: Generate service-specific prompts and exports for external design tools
-argument-hint: "[service: stitch|v0|figma|pencil|generic] [screen: SCR-XX (optional)]"
+argument-hint: "[service: stitch|v0|figma|pencil|design-md|generic] [screen: SCR-XX (optional)]"
 allowed-tools: [Read, Write, Glob, Grep, AskUserQuestion, Task]
 agent: ui-prompter (for complex exports)
 ---
 
 <objective>
-Transform UI specifications into service-optimized outputs. Generate prompts for AI design tools (Stitch, V0), export formats for design applications (Figma), or execute designs directly via MCP (Pencil). Uses service-specific adapters to ensure optimal output generation.
+Transform UI specifications into service-optimized outputs. Generate prompts for AI design tools (Stitch, V0), export formats for design applications (Figma), execute designs directly via MCP (Pencil), or produce a publishable DESIGN.md (VoltAgent/awesome-design-md format). Uses service-specific adapters to ensure optimal output generation.
 </objective>
 
 <context>
@@ -15,11 +15,15 @@ Transform UI specifications into service-optimized outputs. Generate prompts for
 @./.claude/ui-design/adapters/v0.md
 @./.claude/ui-design/adapters/figma.md
 @./.claude/ui-design/adapters/pencil.md
+@./.claude/ui-design/adapters/design-md.md
 @./.claude/ui-design/adapters/generic.md
 @.harn/design/UI-SPEC.md (required)
 @.harn/design/screens/*.md (required)
 @.harn/design/COMPONENTS.md (recommended)
 @.harn/design/design-tokens.json (recommended)
+@.harn/design/UI-CONTEXT.md (recommended for design-md)
+@.harn/design/UI-PATTERNS.md (recommended for design-md)
+@.harn/design/UI-DECISIONS.md (recommended for design-md)
 </context>
 
 <ux_principles>
@@ -34,6 +38,7 @@ Options:
 - V0 — React component generation (recommended for implementation)
 - Figma — Token export + setup guide
 - Pencil — Direct design execution via MCP (recommended for rapid prototyping)
+- DESIGN.md (VoltAgent format) — Single Markdown file describing the full visual system; agent-consumable and publishable
 - Generic — Tool-agnostic prompts
 
 ## Scope Selection
@@ -54,6 +59,7 @@ Parse the command arguments:
 - `v0` → Vercel V0 prompts
 - `figma` → Figma token export + setup
 - `pencil` → Direct Pencil MCP execution
+- `design-md` → DESIGN.md (VoltAgent/awesome-design-md format) — single-file visual system doc
 - `generic` → Tool-agnostic prompts (default if no argument)
 
 Optional screen filter:
@@ -61,12 +67,15 @@ Optional screen filter:
 - `SCR-01,SCR-02,SCR-03` → Export multiple screens
 - No filter → Export all screens
 
+**Note:** The `design-md` service is system-level, not screen-level. It ignores any screen filter and always produces a single file describing the full visual system.
+
 Examples:
 - `/ui:export stitch` → All screens to Stitch
 - `/ui:export v0 SCR-01` → Single screen to V0
 - `/ui:export figma` → Full Figma setup
 - `/ui:export pencil` → Direct design execution
 - `/ui:export pencil SCR-01` → Single screen to Pencil
+- `/ui:export design-md` → Single DESIGN.md file at `.harn/design/ui-exports/DESIGN.md`
 </step>
 
 <step name="verify_prerequisites">
@@ -96,6 +105,10 @@ If required files missing:
 - Inform user what's needed
 - Suggest command to run
 - Exit gracefully
+
+**Service-specific requirements:**
+
+- `design-md` is system-level — screen specs are NOT required, but at least one of the following should exist to produce a useful output: `design-tokens.json`, `COMPONENTS.md`, `UI-CONTEXT.md`. If all three are missing, warn the user that DESIGN.md will be mostly "*Not yet defined*" placeholders and ask whether to proceed. Recommended additional inputs: `UI-PATTERNS.md` (feeds §7 Do's) and `UI-DECISIONS.md` (feeds §7 Don'ts).
 </step>
 
 <step name="load_adapter">
@@ -521,6 +534,266 @@ Method: Parallel subagents (1 per screen)
 ```
 </step>
 
+<step name="transform_to_design_md">
+## DESIGN.md Export (VoltAgent Format)
+
+Produce a single `DESIGN.md` file with the 9 canonical sections defined by the VoltAgent/awesome-design-md format. This is a system-level artifact (not per-screen), designed for AI agents to consume as a visual contract and for humans to publish alongside `README.md` / `AGENTS.md` / `CLAUDE.md`.
+
+### Inputs aggregated
+
+| Section | Source | Notes |
+|---------|--------|-------|
+| §1 Visual Theme & Atmosphere | `UI-CONTEXT.md` — Mood, audience, inspiration, keywords | Emit 2–5 paragraphs of prose |
+| §2 Color Palette & Roles | `design-tokens.json` → `color.*` | Walk each role; emit hex; dark-mode parallel table if `$extensions.mode.dark` present |
+| §3 Typography Rules | `design-tokens.json` → `fontFamily.*`, `fontSize.*`, `fontWeight.*`, `lineHeight.*` | Build scale table |
+| §4 Component Stylings | `COMPONENTS.md` | Prose paragraphs per component — no props, no TSX |
+| §5 Layout Principles | `design-tokens.json` → `spacing.*` + `UI-CONTEXT.md` layout notes | List spacing values; pull grid/container rules |
+| §6 Depth & Elevation | `design-tokens.json` → `shadow.*` | Token name → CSS value → intended use |
+| §7 Do's and Don'ts | `UI-PATTERNS.md` (Do's) + `UI-DECISIONS.md` (Don'ts) | Recommended patterns → Do; rejected options → Don't |
+| §8 Responsive Behavior | `UI-CONTEXT.md` → viewport, breakpoints, device focus | Emit breakpoints table + strategy |
+| §9 Agent Prompt Guide | Aggregated from §§1–6 | Three templated prompts: general, new screen, new component |
+
+### Transformation rules
+
+Follow the adapter at `./.claude/ui-design/adapters/design-md.md` — section `<transformation_rules>` is authoritative. Key invariants:
+
+1. **All 9 sections always present.** If source is missing data, emit the section with a single italicized placeholder line: `*Not yet defined — see [source-file].*`
+2. **Preserve hex values exactly** — no re-quantizing or re-naming colors.
+3. **Prose, not bullets, in §1 and §4** — mood and component descriptions read better as sentences.
+4. **Drop harness-internal metadata** (`$type`, `$description`, `$metadata.*`, raw token paths like `color.primary.500`). Translate to human language.
+5. **Dark mode is parallel, not alternate** — emit a second palette table under §2; never a separate section or file.
+6. **§9 references concrete values** from §§2–6 so the prompts are self-contained.
+
+### Output file
+
+**Single file:** `.harn/design/ui-exports/DESIGN.md`
+
+This path is canonical — the user may move the file to the project root after review. Do NOT place it in a per-service subfolder.
+
+### Template skeleton
+
+```markdown
+# DESIGN.md
+
+> Visual design system for [Project Name].
+> Source of truth for AI agents generating UI consistent with the brand.
+
+---
+
+## 1. Visual Theme & Atmosphere
+
+[2–5 paragraphs of prose from UI-CONTEXT.md Mood/Direction.]
+
+**Keywords:** [comma list from UI-CONTEXT tags]
+**Inspiration:** [from UI-CONTEXT inspiration]
+**Audience:** [from UI-CONTEXT audience]
+
+---
+
+## 2. Color Palette & Roles
+
+**Mode:** [Light / Dark / Both — inferred from presence of `$extensions.mode.dark`]
+
+### Core Palette
+
+| Role | Hex | Usage |
+|------|-----|-------|
+| Primary | `#HEX` | [usage] |
+| Secondary | `#HEX` | [usage] |
+| Background (page) | `#HEX` | [usage] |
+| Surface (cards) | `#HEX` | [usage] |
+| Text primary | `#HEX` | [usage] |
+| Text muted | `#HEX` | [usage] |
+| Border | `#HEX` | [usage] |
+| Success | `#HEX` | [usage] |
+| Warning | `#HEX` | [usage] |
+| Error/Destructive | `#HEX` | [usage] |
+
+### Dark Mode (emit only if any token has `$extensions.mode.dark`)
+
+| Role | Hex | Notes |
+|------|-----|-------|
+| ... | ... | ... |
+
+**Rules:**
+- [rules from UI-DECISIONS color-usage entries, if any]
+
+---
+
+## 3. Typography Rules
+
+**Font families:**
+- Sans: `[fontFamily.sans.$value]` — used for [where]
+- Serif: `[fontFamily.serif.$value]` — used for [where, if defined]
+- Mono: `[fontFamily.mono.$value]` — used for code, numerics
+
+**Scale:**
+
+| Role | Size | Weight | Line height | Use |
+|------|------|--------|-------------|-----|
+| Display | [fontSize.display] | [weight] | [lh] | Hero, marketing |
+| H1 | [fontSize.h1] | [weight] | [lh] | Page title |
+| H2 | [fontSize.h2] | [weight] | [lh] | Section title |
+| H3 | [fontSize.h3] | [weight] | [lh] | Subsection |
+| Body | [fontSize.base] | [weight] | [lh] | Paragraphs |
+| Small | [fontSize.sm] | [weight] | [lh] | Captions, helper |
+| Code | [fontSize.code] | [weight] | [lh] | Inline + blocks |
+
+**Rules:**
+- [rules from UI-DECISIONS typography entries]
+
+---
+
+## 4. Component Stylings
+
+[For each component in COMPONENTS.md, emit a prose paragraph. Use present-tense descriptive voice. See adapter `<component_descriptions>` for prose patterns.]
+
+### Buttons
+
+**Primary:** [prose description of fill, text, radius, padding, states.]
+
+**Secondary:** [prose description.]
+
+**Ghost / tertiary:** [prose description.]
+
+**Destructive:** [prose description — "only for irreversible actions".]
+
+### Inputs
+
+[prose for text, select, checkbox, radio, toggle.]
+
+### Cards & Surfaces
+
+[prose for card treatment.]
+
+### Navigation
+
+[prose for top nav, side nav, tabs, breadcrumbs.]
+
+### Feedback
+
+[prose for toasts, alerts, banners, modals, tooltips.]
+
+### Data display
+
+[prose for tables, lists, badges, chips, avatars.]
+
+---
+
+## 5. Layout Principles
+
+**Spacing scale:** [comma-separated list from `spacing.*` tokens in order]
+
+**Grid:** [from UI-CONTEXT Layout notes]
+
+**Containers:**
+- Page max-width: [value]
+- Content max-width: [value]
+- Sidebar width: [value if applicable]
+
+**Rhythm rules:**
+- [rules from UI-CONTEXT + UI-PATTERNS layout entries]
+
+**Alignment:** [from UI-CONTEXT]
+
+---
+
+## 6. Depth & Elevation
+
+**Philosophy:** [infer from shadow count — "flat" if only `shadow.none`; "subtle" if sm/md only; "layered" if full scale]
+
+**Elevation scale:**
+
+| Level | Token | Value | Used for |
+|-------|-------|-------|----------|
+| 0 | `shadow.none` | none | Flat surfaces |
+| 1 | `shadow.sm` | [value] | Resting cards |
+| 2 | `shadow.md` | [value] | Hover, dropdowns |
+| 3 | `shadow.lg` | [value] | Modals, popovers |
+| 4 | `shadow.xl` | [value] | Dialogs |
+
+**Rules:**
+- [from UI-DECISIONS elevation-philosophy entries]
+
+---
+
+## 7. Do's and Don'ts
+
+### Do
+
+- [Each UI-PATTERNS entry with status=recommended, paraphrased to prescriptive voice.]
+
+### Don't
+
+- [Each UI-DECISIONS entry with chosen=false or section=rejected, paraphrased as "Don't X".]
+
+---
+
+## 8. Responsive Behavior
+
+**Breakpoints:**
+
+| Name | Min width | Target device |
+|------|-----------|---------------|
+| [name] | [width] | [device] |
+
+**Strategy:** [from UI-CONTEXT — mobile-first / desktop-first]
+
+**Rules:**
+- [responsive patterns from UI-PATTERNS with status=recommended.]
+
+**Device focus:** [from UI-CONTEXT Device focus field]
+
+---
+
+## 9. Agent Prompt Guide
+
+### General brief
+
+\`\`\`
+You are designing UI for [Project Name]. The system feels [keywords from §1].
+Use the palette in §2 exactly — primary is #HEX, backgrounds are #HEX, text is #HEX.
+Typography: [sans family] for UI, [mono family] for code. Body size: [fontSize.base].
+Spacing scale: [values]. Corner radius: [borderRadius values]. Shadows: [description from §6].
+Always follow the Do/Don't rules in §7.
+\`\`\`
+
+### Building a new screen
+
+\`\`\`
+Generate a [screen type] for [Project Name] at [viewport from §8].
+Layout: [container max-width + alignment from §5].
+Colors: [palette roles from §2].
+Components: use the [button / input / card] treatments from §4.
+Elevation: [rule from §6].
+Follow Do's in §7; avoid Don'ts.
+\`\`\`
+
+### Adding a component
+
+\`\`\`
+Design a new [component] for [Project Name].
+Match the visual treatment in §4 — same radius, padding rhythm, and color roles.
+If interactive, define hover/active/disabled using the palette in §2.
+Respect elevation in §6; don't introduce a new shadow level.
+\`\`\`
+```
+
+### Post-generation
+
+After writing `.harn/design/ui-exports/DESIGN.md`:
+
+1. Validate all 9 sections present (headings `## 1.` through `## 9.`).
+2. Report any section that fell back to the "*Not yet defined*" placeholder so the user knows which source file to populate.
+3. Record the export in `UI-DECISIONS.md` with date + source artifact versions.
+
+### Iteration guidance
+
+If a section looks wrong:
+- Edit the underlying source (`UI-CONTEXT.md`, `design-tokens.json`, `COMPONENTS.md`, `UI-PATTERNS.md`, `UI-DECISIONS.md`), then re-run `/ui:export design-md`.
+- DESIGN.md is derived — never edit it by hand and expect the changes to persist. The harness treats it as a build artifact.
+</step>
+
 <step name="transform_to_generic">
 ## Generic Export
 
@@ -648,6 +921,12 @@ Update `.harn/design/UI-REGISTRY.md`:
 | SCR-01 | ✓ v2 | ✓ v1 | ✓ | ✓ screen_abc | ✓ | 2026-01-19 |
 | SCR-02 | ✓ v1 | ✓ v1 | ✓ | ✓ screen_def | ✓ | 2026-01-19 |
 | SCR-03 | ○ | ○ | ○ | ○ | ○ | - |
+
+## System-Level Exports
+
+| Artifact | Status | File | Last Export |
+|----------|--------|------|-------------|
+| DESIGN.md | [✓ / ○] | `.harn/design/ui-exports/DESIGN.md` | [date] |
 ```
 </step>
 
@@ -670,6 +949,12 @@ Update `.harn/design/ui-state/coordinator-state.json`:
           "SCR-02": "screen_def456"
         }
       },
+      "design_md": {
+        "generated": true,
+        "file": ".harn/design/ui-exports/DESIGN.md",
+        "last_export": "[timestamp]",
+        "sections_with_placeholders": []
+      },
       "generic": [N]
     }
   }
@@ -685,8 +970,8 @@ Update `.harn/design/ui-state/coordinator-state.json`:
  UI ► EXPORT COMPLETE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Service:  [stitch/v0/figma/generic]
-Screens:  [N] prompts generated
+Service:  [stitch/v0/figma/pencil/design-md/generic]
+Screens:  [N] prompts generated (design-md: system-level, screens not iterated)
 
 Prompts:
   ✓ SCR-01: Login           → stitch-prompts.md#scr-01
@@ -700,6 +985,7 @@ Handoffs:
 
 Files:
   .harn/design/ui-exports/[service]-prompts.md (or pencil-operations.md)
+  .harn/design/ui-exports/DESIGN.md (for design-md exports)
   .harn/design/ui-exports/handoffs/*.md
   .harn/design/pencil/app.pen (for Pencil exports)
 
@@ -733,6 +1019,13 @@ Files:
 3. Review pencil-operations.md for details
 4. Iterate with Update operations if needed
 5. Node IDs recorded for future reference
+
+[For DESIGN.md]
+1. Review .harn/design/ui-exports/DESIGN.md
+2. Check that all 9 sections have real content (not "*Not yet defined*" placeholders)
+3. If placeholders remain, populate the corresponding source file and re-run `/ui:export design-md`
+4. Move to project root (or copy) so other agents (Claude Code, Cursor, Windsurf) can consume it as visual contract
+5. Commit alongside README.md / AGENTS.md — it's a publishable artifact
 
 ───────────────────────────────────────────────────────
 

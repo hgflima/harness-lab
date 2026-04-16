@@ -4,32 +4,33 @@ This directory contains export adapters for different design tools. Each adapter
 
 ## Adapter Comparison
 
-| Feature | Stitch | V0 | Figma | Pencil | Generic |
-|---------|--------|-----|-------|--------|---------|
-| **Output** | Visual designs | React code | Design files | .pen files | Universal prompts |
-| **Primary Use** | Quick mockups | Production code | Full design work | Direct execution | Unknown tools |
-| **Best For** | Visual exploration | React/Next.js apps | Team collaboration | Rapid prototyping | Future-proofing |
-| **Code Output** | HTML/CSS/Flutter | React + Tailwind | CSS snippets | N/A (design) | None |
-| **Token Import** | Manual (hex values) | Via Tailwind config | Native Variables | Direct (set_variables) | Manual (hex values) |
-| **Iteration** | Re-prompt | Built-in UI | Full control | Update operations | Re-prompt |
-| **Collaboration** | Solo | Solo | Excellent | Solo | Solo |
-| **Prototyping** | N/A | React state | Excellent | Static designs | N/A |
-| **Execution** | Manual | Manual | Manual | **Automatic** | Manual |
+| Feature | Stitch | V0 | Figma | Pencil | DESIGN.md | Generic |
+|---------|--------|-----|-------|--------|-----------|---------|
+| **Output** | Visual designs | React code | Design files | .pen files | Single .md file (9 sections) | Universal prompts |
+| **Primary Use** | Quick mockups | Production code | Full design work | Direct execution | Agent-consumable visual contract | Unknown tools |
+| **Best For** | Visual exploration | React/Next.js apps | Team collaboration | Rapid prototyping | Feeding other AI agents; brand onboarding | Future-proofing |
+| **Code Output** | HTML/CSS/Flutter | React + Tailwind | CSS snippets | N/A (design) | None (documentation) | None |
+| **Token Import** | Manual (hex values) | Via Tailwind config | Native Variables | Direct (set_variables) | Bidirectional (import-design-md) | Manual (hex values) |
+| **Iteration** | Re-prompt | Built-in UI | Full control | Update operations | Edit sources + re-export | Re-prompt |
+| **Collaboration** | Solo | Solo | Excellent | Solo | Publishable (Git-tracked) | Solo |
+| **Prototyping** | N/A | React state | Excellent | Static designs | N/A (system-level only) | N/A |
+| **Execution** | Manual | Manual | Manual | **Automatic** | Derived artifact | Manual |
 
 ## Capability Matrix
 
-| Capability | Stitch | V0 | Figma | Pencil | Generic |
-|------------|--------|-----|-------|--------|---------|
-| Full screens | ✅ Excellent | ✅ Good | ✅ Excellent | ✅ Excellent | ✅ Works |
-| Components | ⚠️ Limited | ✅ Excellent | ✅ Excellent | ✅ Excellent | ✅ Works |
-| Responsive | ✅ Good | ✅ Excellent | ✅ Excellent | ✅ Good | ✅ Works |
-| Dark mode | ✅ Good | ✅ Excellent | ✅ Excellent | ✅ Excellent | ✅ Works |
-| Animations | ⚠️ Limited | ✅ Good | ✅ Good | ⚠️ Limited | ⚠️ Variable |
-| Production code | ⚠️ Basic | ✅ Excellent | ⚠️ Dev Mode | ❌ N/A | ⚠️ Variable |
-| TypeScript | ❌ No | ✅ Excellent | ❌ N/A | ❌ N/A | ❌ N/A |
-| Design handoff | ⚠️ Via Figma | Direct code | ✅ Excellent | ✅ Screenshots | ⚠️ Manual |
-| Visual validation | ❌ Manual | ❌ Manual | ✅ Good | ✅ Excellent | ❌ Manual |
-| Design systems | ⚠️ Limited | ✅ shadcn | ✅ Excellent | ✅ Excellent | ⚠️ Variable |
+| Capability | Stitch | V0 | Figma | Pencil | DESIGN.md | Generic |
+|------------|--------|-----|-------|--------|-----------|---------|
+| Full screens | ✅ Excellent | ✅ Good | ✅ Excellent | ✅ Excellent | ❌ No (system only) | ✅ Works |
+| Components | ⚠️ Limited | ✅ Excellent | ✅ Excellent | ✅ Excellent | ✅ Good (prose) | ✅ Works |
+| Responsive | ✅ Good | ✅ Excellent | ✅ Excellent | ✅ Good | ✅ Good | ✅ Works |
+| Dark mode | ✅ Good | ✅ Excellent | ✅ Excellent | ✅ Excellent | ✅ Good (parallel palette) | ✅ Works |
+| Animations | ⚠️ Limited | ✅ Good | ✅ Good | ⚠️ Limited | ❌ No | ⚠️ Variable |
+| Production code | ⚠️ Basic | ✅ Excellent | ⚠️ Dev Mode | ❌ N/A | ❌ No | ⚠️ Variable |
+| TypeScript | ❌ No | ✅ Excellent | ❌ N/A | ❌ N/A | ❌ N/A | ❌ N/A |
+| Design handoff | ⚠️ Via Figma | Direct code | ✅ Excellent | ✅ Screenshots | ✅ Excellent (agent-readable) | ⚠️ Manual |
+| Visual validation | ❌ Manual | ❌ Manual | ✅ Good | ✅ Excellent | ❌ Manual | ❌ Manual |
+| Design systems | ⚠️ Limited | ✅ shadcn | ✅ Excellent | ✅ Excellent | ✅ Excellent (canonical spec) | ⚠️ Variable |
+| Bidirectional sync | ❌ No | ❌ No | ⚠️ Partial | ❌ No | ✅ Excellent (export + import) | ❌ No |
 
 ## When to Use Each Adapter
 
@@ -100,6 +101,22 @@ Skip when:
 - Don't have Pencil MCP server
 ```
 
+### DESIGN.md (VoltAgent format)
+```
+Use when:
+- Feeding other AI agents (Claude Code, Cursor, Windsurf) a compact visual contract
+- Onboarding a project from an existing brand (Stripe, Linear, Claude, etc. via VoltAgent catalog)
+- Publishing a visual spec alongside README.md / AGENTS.md / CLAUDE.md
+- Documenting the design system for non-designers or external contributors
+- Wanting bidirectional sync (export from specs; import from an existing DESIGN.md)
+
+Skip when:
+- Need per-screen detail (DESIGN.md is system-level only — use V0/Stitch/Figma for screens)
+- Need executable code or interactive prototype
+- Project has no tokens / COMPONENTS.md / UI-CONTEXT.md populated yet
+  (output will be mostly "*Not yet defined*" placeholders)
+```
+
 ### Generic
 ```
 Use when:
@@ -145,6 +162,19 @@ Spec → Pencil → Validate (screenshot) → Iterate → V0 → Codebase
 ### Design System Development
 ```
 Spec → Pencil (components) → Pencil (screens) → Screenshot validation → Export
+```
+
+### Brand Onboarding (Import-first)
+```
+/ui:import-design-md voltagent:<brand> → populates tokens + COMPONENTS.md + UI-CONTEXT.md
+→ /ui:design-screens → /ui:export [service]
+```
+
+### Publish Visual Contract (Export-first)
+```
+Spec (tokens + components + context + patterns) → /ui:export design-md
+→ .harn/design/ui-exports/DESIGN.md → move to project root → commit
+→ other agents (Claude Code, Cursor) consume it as visual contract
 ```
 
 ### Unknown Tool
@@ -209,6 +239,7 @@ Adapters consume:
 ├── figma-setup.md         # Figma setup instructions
 ├── pencil-operations.md   # Pencil batch_design operations log
 ├── pencil-handoff.md      # Pencil handoff documentation
+├── DESIGN.md              # VoltAgent-format visual contract (9 sections)
 ├── generic-prompts.md     # Tool-agnostic prompts
 └── handoffs/
     ├── SCR-01-brief.md    # Per-screen design briefs
@@ -243,9 +274,17 @@ All adapters support dark mode via design tokens:
 | V0 | Uses Tailwind `dark:` classes, respects CSS variables |
 | Figma | Uses Variable modes (Light/Dark) |
 | Pencil | Native variables with `$extensions.mode` |
+| DESIGN.md | Parallel palette table under §2 (same section, second table) — never a separate section or file |
 | Generic | Describe both modes in visual language |
 
 ## Version History
+
+- **0.7.0** — DESIGN.md adapter (VoltAgent/awesome-design-md)
+  - New adapter for single-file visual contract documentation
+  - Bidirectional: `/ui:export design-md` (specs → DESIGN.md) and `/ui:import-design-md` (DESIGN.md → specs)
+  - 9 canonical sections (Visual Theme, Color, Typography, Components, Layout, Elevation, Do's/Don'ts, Responsive, Agent Prompt Guide)
+  - VoltAgent catalog shortcut: `/ui:import-design-md voltagent:<brand>`
+  - Auto-detection in `/ui:init` at `./DESIGN.md`, `./docs/DESIGN.md`, `./design/DESIGN.md`, `./.harn/design/DESIGN.md`
 
 - **0.4.0** — Pencil MCP adapter
   - New Pencil adapter for direct design execution

@@ -47,14 +47,15 @@ EXPORT
 ─────────────────────────────────────────────────────
 
   /ui:export [service]  Generate service-specific prompts
-                        Services: stitch, v0, figma, pencil, generic
-                        Creates: ui-exports/*.md
+                        Services: stitch, v0, figma, pencil, design-md, generic
+                        Creates: ui-exports/*.md (DESIGN.md for design-md)
 
                         Examples:
                         /ui:export stitch
                         /ui:export v0 SCR-01
                         /ui:export figma
                         /ui:export pencil
+                        /ui:export design-md        VoltAgent DESIGN.md format
 
 PENCIL DESIGN (Interactive)
 ─────────────────────────────────────────────────────
@@ -111,6 +112,15 @@ IMPORT
   /ui:import-design     Import design from external tools
                         Reverse sync, drift detection
                         Updates: screen specs, patterns
+
+  /ui:import-design-md  Import DESIGN.md (VoltAgent format)
+                        Sources: voltagent:<name>, HTTPS URL, local path
+                        Populates tokens, context, components, patterns
+
+                        Examples:
+                        /ui:import-design-md voltagent:claude
+                        /ui:import-design-md https://example.com/DESIGN.md
+                        /ui:import-design-md ./DESIGN.md
 
 TRACKING
 ─────────────────────────────────────────────────────
@@ -183,6 +193,13 @@ TYPICAL WORKFLOWS
   /ui:pencil sync --push    Visualize in Pencil
   /ui:pencil iterate        Refine designs
 
+## DESIGN.md Flow (VoltAgent)
+
+  /ui:import-design-md voltagent:claude   Import curated catalog entry
+  [Review tokens/context/patterns populated]
+  /ui:design-screens                      Specify screens using imported system
+  /ui:export design-md                    Export back to DESIGN.md artifact
+
 ## Maintenance
 
   /ui:sync                  Check for drift
@@ -213,6 +230,7 @@ ARTIFACTS CREATED
   │   ├── v0-prompts.md       V0-optimized prompts
   │   ├── figma-tokens.json   Figma Variables export
   │   ├── pencil-operations.md  Pencil operations log
+  │   ├── DESIGN.md           VoltAgent DESIGN.md (9 sections)
   │   ├── generic-prompts.md  Tool-agnostic prompts
   │   └── handoffs/           Design handoff docs
   ├── ui-state/
@@ -238,6 +256,10 @@ SUPPORTED SERVICES
   Pencil      Direct design via MCP (Interactive)
               Best for: Rapid prototyping, iteration
               Unique: Executes directly, visual validation
+
+  DESIGN.md   VoltAgent DESIGN.md format (Markdown)
+              Best for: Living visual documentation, LLM-readable spec
+              Bidirectional: export from specs, import from catalog/URL/path
 
   Generic     Tool-agnostic prompts
               Best for: Any AI design tool

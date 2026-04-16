@@ -42,6 +42,7 @@ Check for existence and content of all UI artifacts:
 - `.harn/design/ui-exports/stitch-prompts.md`
 - `.harn/design/ui-exports/v0-prompts.md`
 - `.harn/design/ui-exports/figma-tokens.json`
+- `.harn/design/ui-exports/DESIGN.md` — VoltAgent DESIGN.md export (report mtime if present)
 - `.harn/design/ui-exports/generic-prompts.md`
 - `.harn/design/ui-exports/handoffs/*.md`
 
@@ -152,6 +153,10 @@ EXPORTS                                      [2 services]
 
   Figma:
     ✓ Tokens exported
+
+  DESIGN.md:
+    ✓ present (last generated: 2026-04-15 18:32)
+    [or] ○ Not generated
 
   Generic:
     ○ Not exported

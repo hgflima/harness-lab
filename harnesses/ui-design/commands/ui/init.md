@@ -52,7 +52,62 @@ Before asking questions, analyze:
    - .harn/design/UI-SPEC.md → Specs already started
    - figma-tokens.json, tokens.json → Design system exists
 
-Report what was detected before asking questions.
+4. **Check for existing DESIGN.md (VoltAgent/awesome-design-md format):**
+   - Glob in this order, first match wins but continue collecting all to offer choice if multiple:
+     - `./DESIGN.md` (canonical VoltAgent location — project root)
+     - `./docs/DESIGN.md`
+     - `./design/DESIGN.md`
+     - `./.harn/design/DESIGN.md` (previously copied here)
+   - For each match, verify it looks like a DESIGN.md by checking for the first 2–3 canonical headings (`## 1.`, `## 2.`, `## 3.`) within the first 200 lines.
+
+Report what was detected before asking questions:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ UI ► CONTEXT DETECTED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Framework:    [detected or unknown]
+Styling:      [Tailwind / CSS Modules / styled-components / unknown]
+Components:   [N found in src/components/ or "none detected"]
+Existing specs: [.harn/design/... if any]
+
+✓ DESIGN.md found at <path>   (if applicable)
+
+───────────────────────────────────────────────────────
+```
+
+### Sub-step: DESIGN.md import prompt (runs before `platform_discovery`)
+
+If one or more DESIGN.md files were found:
+
+**If multiple found,** ask which to use:
+
+**Question: Multiple DESIGN.md files detected. Which should I use?**
+
+Options (dynamic — one per detected path):
+- `./DESIGN.md`
+- `./docs/DESIGN.md`
+- `./design/DESIGN.md`
+- `./.harn/design/DESIGN.md`
+- None — skip and continue with the normal flow
+
+**Then, for the selected file (or the single match):**
+
+**Question: Encontrei um DESIGN.md em `<path>`. Importar agora para popular tokens, contexto e patterns?**
+
+Options:
+- Yes — run `/ui:import-design-md <path>` now, then continue with the remaining init steps using the newly-populated specs
+- No — continue normal flow (existing DESIGN.md will stay on disk untouched)
+
+**On "Yes":**
+- Dispatch `/ui:import-design-md <path>` (with the path verbatim — relative or absolute).
+- After import completes, mark the following fields as **already answered** and skip their questions in subsequent steps:
+  - `platform_discovery` — can still run if framework was not detected by step 1 (DESIGN.md does NOT encode framework).
+  - `design_context` — **skip entirely** if DESIGN.md populated `UI-CONTEXT.md` with Mood / Direction / Inspiration / Audience (which it does). Report "Design context populated from DESIGN.md import".
+  - `constraints_discovery` — still ask; DESIGN.md does not encode performance budget, RTL, or "must match existing brand colors" (brand is already set).
+  - `users_discovery` — still ask; DESIGN.md encodes `audience` (seeded into UI-CONTEXT), but device / tech-level follow-ups are finer-grained.
+- Record in the detection summary which fields were populated from the import (see `write_context` step).
 </step>
 
 <step name="platform_discovery">
@@ -150,6 +205,53 @@ Provide researcher with:
 - Detected context
 - User responses
 - Specific research questions
+
+### VoltAgent catalog shortcut for "Like [Product]"
+
+When the user picked "Like [Product name]" in `design_context` and cited a brand, the researcher agent should FIRST check whether the brand matches a known entry in the VoltAgent/awesome-design-md catalog, **before** performing its default WebFetch + pattern-extraction flow.
+
+**Known brands (hardcoded snapshot — favor previsibilidade over freshness):**
+
+```
+airbnb, apple, airtable, anthropic-claude, basecamp, brave, canva, chatgpt,
+claude, cloudflare, coda, discord, dribbble, dropbox, duolingo, figma,
+firefox, framer, github, gitlab, glassdoor, gmail, google, grammarly,
+headspace, hubspot, intercom, jira, kickstarter, linear, linkedin, loom,
+mailchimp, medium, microsoft, miro, netflix, notion, obsidian, openai,
+patreon, pinterest, postmates, product-hunt, quora, raycast, reddit,
+replit, riot, shopify, slack, snapchat, soundcloud, spotify, square,
+squarespace, stack-overflow, stripe, substack, supabase, tailwind-ui,
+tiktok, trello, tumblr, twitch, twitter-x, typeform, uber, ubereats,
+vercel, vimeo, vk, webflow, whatsapp, wikipedia, wise, wistia, wordpress,
+yelp, youtube, zapier, zendesk, zoom
+```
+
+(Lista mantida como referência. Novos nomes podem aparecer upstream — o comando `/ui:import-design-md voltagent:<name>` trata 404 graciosamente com fallback interativo, então é seguro tentar um nome fora da lista se o usuário insistir.)
+
+**Matching logic (slugify before compare):**
+- Lowercase the brand name.
+- Replace spaces with `-` (e.g. "Stack Overflow" → `stack-overflow`).
+- Strip diacritics.
+- Check membership in the snapshot above.
+
+**If the brand matches:**
+
+Offer a shortcut BEFORE starting the normal "Like [Product]" analysis:
+
+**Question: A VoltAgent tem um DESIGN.md curado para `<brand>`. Quer importar como ponto de partida?**
+
+Options:
+- Sim — importar via `/ui:import-design-md voltagent:<name>` (recomendado para acelerar setup)
+- Não, prefiro análise fresca — seguir o fluxo padrão de WebFetch + extração de padrões
+- Importar E depois fazer análise — usar o VoltAgent como base e enriquecer com análise do site atual
+
+**If "Sim":** dispatch `/ui:import-design-md voltagent:<name>` and use the resulting artifacts as the output of this step. Skip the default WebFetch analysis for this brand.
+
+**If "Importar E depois fazer análise":** dispatch the import first, then run WebFetch on the brand's site to extract anything not in DESIGN.md (screenshots, interaction patterns, recent refreshes). Merge findings into `UI-INSPIRATION.md`.
+
+**If no match (or user declined):** follow the existing flow — WebFetch + pattern extraction against the cited brand.
+
+Record the shortcut usage (or the declined offer) in `UI-DECISIONS.md` for provenance.
 </step>
 
 <step name="write_context">
@@ -197,7 +299,13 @@ Generated by: /ui:init
 
 ## Integration
 - **Requirements:** [path if exists]
+
+## Provenance
+- **Seeded from DESIGN.md:** [path or voltagent:<name> | "no"]
+- **Imported at:** [timestamp if applicable]
 ```
+
+**If the init flow imported a DESIGN.md** (either via auto-detection in `detect_context` or via the VoltAgent shortcut in `spawn_researcher`), the fields for Mood / Inspiration / Direction / Audience will already be populated in `UI-CONTEXT.md` by `/ui:import-design-md`. In that case, this step should only add the init-specific fields (Platform, Tech Stack, Constraints, Integration, Provenance) and preserve the imported content.
 </step>
 
 <step name="initialize_state">
@@ -238,10 +346,22 @@ Constraints:  [summary]
 Users:        [audience]
 Inspiration:  [summary or "None specified"]
 
+Seeded from DESIGN.md: [path | voltagent:<name> | "no"]
+[If yes, list what was populated:]
+  ✓ Tokens populated from §2, §3, §5, §6
+  ✓ Mood / Inspiration / Audience populated from §1
+  ✓ Components populated from §4 into COMPONENTS.md
+  ✓ Do's / Don'ts populated from §7 into UI-PATTERNS.md / UI-DECISIONS.md
+  ✓ Breakpoints / device focus populated from §8
+
 Files Created/Updated:
   ✓ .harn/design/UI-CONTEXT.md
   ✓ .harn/design/ui-state/coordinator-state.json
   [✓ .harn/design/UI-INSPIRATION.md (if applicable)]
+  [✓ .harn/design/design-tokens.json (if DESIGN.md imported)]
+  [✓ .harn/design/COMPONENTS.md (if DESIGN.md imported)]
+  [✓ .harn/design/UI-PATTERNS.md (if DESIGN.md imported)]
+  [✓ .harn/design/UI-DECISIONS.md (always, for import log)]
 
 ───────────────────────────────────────────────────────
 
@@ -267,4 +387,9 @@ Or if you have requirements:
 - User preferences documented
 - Inspiration analyzed (if provided)
 - Clear next step recommended
+- DESIGN.md at `./DESIGN.md`, `./docs/DESIGN.md`, `./design/DESIGN.md`, or `./.harn/design/DESIGN.md` is detected and user is offered an import before `platform_discovery`
+- If multiple DESIGN.md files exist, user is asked which to use
+- When "Like [Product]" cites a known VoltAgent brand, researcher offers `/ui:import-design-md voltagent:<name>` as shortcut BEFORE default WebFetch analysis
+- Menu of `design_context` is NOT polluted with a fixed "Import from VoltAgent catalog" option — VoltAgent shortcut only surfaces when user organically cites a known brand via "Like [Product]"
+- Completion summary documents when tokens/context/patterns were populated from a DESIGN.md import (path or voltagent:<name>)
 </success_criteria>

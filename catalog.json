@@ -25,7 +25,7 @@
   "harnesses": [
     {
       "name": "prd-generator",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Context engineering PRD generator for AI-driven software development",
       "categories": ["product", "software-engineering"],
       "author": "hgflima",
@@ -97,7 +97,7 @@
     },
     {
       "name": "ui-design",
-      "version": "0.6.1",
+      "version": "0.7.0",
       "description": "Service-agnostic UI/UX specification system — design tokens, screen specs, component definitions, and multi-tool export",
       "categories": ["design"],
       "author": "hgflima",

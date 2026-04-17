@@ -1,0 +1,19 @@
+{
+  "name": "user-journey-map",
+  "version": "1.0.0",
+  "description": "Interactive progressive-extraction skill that produces a simple, structured user journey map (Pareto 3-col default, JTBD 5-col on demand) with explicit provenance marks, optional Mermaid diagrams, validation checklist, and hard PRD boundary. Ships 5 slash commands (create/validate/expand/mermaid/audit) and co-locates 2 specialized subagents (drafter + researcher) inside the skill.",
+  "categories": ["product", "design"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": ["user-journey-map"],
+    "commands": [
+      "user-journey-map/create",
+      "user-journey-map/validate",
+      "user-journey-map/expand",
+      "user-journey-map/mermaid",
+      "user-journey-map/audit"
+    ],
+    "agents": [],
+    "hooks": []
+  }
+}

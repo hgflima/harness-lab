@@ -1,7 +1,7 @@
 {
   "name": "ui-design",
-  "version": "0.7.0",
-  "description": "Service-agnostic UI/UX specification system for Claude Code — design tokens, screen specs, component definitions, and multi-tool export (Figma, V0, Stitch, Pencil, DESIGN.md/VoltAgent)",
+  "version": "0.8.0",
+  "description": "Service-agnostic UI/UX specification system for Claude Code — design tokens, screen specs, component definitions, and multi-tool export (Figma, V0, Stitch, Stitch MCP, Pencil, DESIGN.md/VoltAgent)",
   "categories": ["design"],
   "author": "hgflima",
   "artifacts": {
@@ -16,6 +16,7 @@
       "ui/generate-specs",
       "ui/pencil",
       "ui/export",
+      "ui/stitch-sync",
       "ui/import-design",
       "ui/import-design-md",
       "ui/import-tokens",
@@ -34,7 +35,8 @@
       "ui-brander",
       "ui-researcher",
       "ui-scanner",
-      "ui-pencil-screen"
+      "ui-pencil-screen",
+      "ui-stitch-screen"
     ],
     "hooks": [],
     "directories": [

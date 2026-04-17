@@ -1,17 +1,18 @@
 ---
 name: ui:export
 description: Generate service-specific prompts and exports for external design tools
-argument-hint: "[service: stitch|v0|figma|pencil|design-md|generic] [screen: SCR-XX (optional)]"
+argument-hint: "[service: stitch|stitch-mcp|v0|figma|pencil|design-md|generic] [screen: SCR-XX (optional)]"
 allowed-tools: [Read, Write, Glob, Grep, AskUserQuestion, Task]
 agent: ui-prompter (for complex exports)
 ---
 
 <objective>
-Transform UI specifications into service-optimized outputs. Generate prompts for AI design tools (Stitch, V0), export formats for design applications (Figma), execute designs directly via MCP (Pencil), or produce a publishable DESIGN.md (VoltAgent/awesome-design-md format). Uses service-specific adapters to ensure optimal output generation.
+Transform UI specifications into service-optimized outputs. Generate prompts for AI design tools (Stitch, V0), export formats for design applications (Figma), execute designs directly via MCP (Pencil or Stitch via `stitch-mcp`), or produce a publishable DESIGN.md (VoltAgent/awesome-design-md format). Uses service-specific adapters to ensure optimal output generation.
 </objective>
 
 <context>
 @./.claude/ui-design/adapters/stitch.md
+@./.claude/ui-design/adapters/stitch-mcp.md
 @./.claude/ui-design/adapters/v0.md
 @./.claude/ui-design/adapters/figma.md
 @./.claude/ui-design/adapters/pencil.md
@@ -35,6 +36,7 @@ If no service specified, offer quick selection:
 
 Options:
 - Stitch — Visual design generation (recommended for high-fidelity mockups)
+- Stitch MCP — Direct execution via Google Stitch MCP (same prompts as Stitch, but runs them in the service automatically; recommended when the MCP server is available)
 - V0 — React component generation (recommended for implementation)
 - Figma — Token export + setup guide
 - Pencil — Direct design execution via MCP (recommended for rapid prototyping)
@@ -55,7 +57,8 @@ Allow exporting:
 ## Parse Arguments
 
 Parse the command arguments:
-- `stitch` → Google Stitch prompts
+- `stitch` → Google Stitch prompts (written to `stitch-prompts.md`)
+- `stitch-mcp` → Google Stitch executed directly via MCP server (uses the same prompt builder as `stitch`)
 - `v0` → Vercel V0 prompts
 - `figma` → Figma token export + setup
 - `pencil` → Direct Pencil MCP execution
@@ -70,7 +73,9 @@ Optional screen filter:
 **Note:** The `design-md` service is system-level, not screen-level. It ignores any screen filter and always produces a single file describing the full visual system.
 
 Examples:
-- `/ui:export stitch` → All screens to Stitch
+- `/ui:export stitch` → All screens to Stitch (prompts-only, written to file)
+- `/ui:export stitch-mcp` → All screens executed directly in the Stitch MCP server
+- `/ui:export stitch-mcp SCR-01` → Single screen executed/updated via Stitch MCP
 - `/ui:export v0 SCR-01` → Single screen to V0
 - `/ui:export figma` → Full Figma setup
 - `/ui:export pencil` → Direct design execution
@@ -109,6 +114,17 @@ If required files missing:
 **Service-specific requirements:**
 
 - `design-md` is system-level — screen specs are NOT required, but at least one of the following should exist to produce a useful output: `design-tokens.json`, `COMPONENTS.md`, `UI-CONTEXT.md`. If all three are missing, warn the user that DESIGN.md will be mostly "*Not yet defined*" placeholders and ask whether to proceed. Recommended additional inputs: `UI-PATTERNS.md` (feeds §7 Do's) and `UI-DECISIONS.md` (feeds §7 Don'ts).
+
+- `stitch-mcp` requires the Google Stitch MCP server to be reachable. Run a smoke test via `mcp__stitch__list_projects` (cheapest read; returns fast when healthy) with a short timeout. If the smoke test fails (tool unavailable, timeout, or server error), DO NOT silently fall through — ask the user what to do:
+
+  ```
+  AskUserQuestion:
+    "The Stitch MCP server did not respond. What would you like to do?"
+    Option 1 — Abort: Stop the export; print a concise diagnostic with suggested fixes (check MCP server, re-authenticate).
+    Option 2 — Fall back to stitch (prompts-only): Generate .harn/design/ui-exports/stitch-prompts.md as if the user ran `/ui:export stitch`, and annotate the output clearly so the user knows MCP was unavailable.
+  ```
+
+  If the smoke test succeeds, proceed to `transform_to_stitch_mcp`. The rationale for asking rather than auto-falling-back: the user's intent when choosing `stitch-mcp` is to execute via MCP — silent fallback would hide a broken setup.
 </step>
 
 <step name="load_adapter">
@@ -135,6 +151,15 @@ The adapter provides:
 - This prevents context window exhaustion from per-screen MCP operations
 
 **For Pencil service (1 screen only):**
+- Handle directly without spawning (single screen fits in context)
+
+**For Stitch MCP service (any screen count 2+):**
+- Same orchestrator + subagent pattern as Pencil (see transform_to_stitch_mcp step)
+- Orchestrator handles setup (smoke test, project resolve, design system sync)
+- Each screen gets its own **ui-stitch-screen** subagent
+- Screen agents run **in parallel**
+
+**For Stitch MCP service (1 screen only):**
 - Handle directly without spawning (single screen fits in context)
 
 **For other services (Stitch, V0, Figma, Generic) with 5+ screens:**
@@ -534,6 +559,214 @@ Method: Parallel subagents (1 per screen)
 ```
 </step>
 
+<step name="transform_to_stitch_mcp">
+## Stitch MCP Export (Direct Execution) — ORCHESTRATOR PATTERN
+
+Unlike the plain `stitch` export, `stitch-mcp` dispatches each screen through `mcp__stitch__*` tool calls, so work lands inside a live Stitch project instead of `stitch-prompts.md`. This step assumes `verify_prerequisites` has already confirmed MCP availability — if the smoke test failed and the user chose the fallback path, the command has already been rerouted to `transform_to_stitch` and this step is skipped.
+
+The prompt text sent to Stitch is built by the **same transformation rules as the plain `stitch` adapter** (`./.claude/ui-design/adapters/stitch.md` — `<transformation_rules>`, `<token_mapping>`, `<component_descriptions>`). This is intentional: a screen rendered via MCP must be visually indistinguishable from one a human generates by pasting the same prompt into stitch.new. Do NOT duplicate the prompt-building logic — reuse the adapter.
+
+### Orchestrator Step 1: Load state and resolve project
+
+Read `.harn/design/ui-state/stitch-state.json` if it exists (otherwise start from defaults):
+
+```javascript
+let state = readJsonOr(".harn/design/ui-state/stitch-state.json", {
+  project_id: null,
+  project_name: deriveProjectName(), // from UI-SPEC.md title or repo basename
+  design_system_id: null,
+  tokens_hash: null,
+  last_sync: null,
+  screen_mapping: {}
+});
+
+// Try ID first (fastest)
+let project = state.project_id
+  ? await mcp__stitch__get_project({ project_id: state.project_id }).catch(() => null)
+  : null;
+
+// Fall back to name lookup (handles state loss / fresh clone)
+if (!project) {
+  const all = await mcp__stitch__list_projects({});
+  project = all.find(p => p.name === state.project_name) ?? null;
+  if (project) state.project_id = project.id;
+}
+
+// Create if still missing
+if (!project) {
+  project = await mcp__stitch__create_project({ name: state.project_name });
+  state.project_id = project.id;
+}
+
+// Persist immediately — partial crash must leave us idempotent
+writeJson(".harn/design/ui-state/stitch-state.json", state);
+```
+
+### Orchestrator Step 2: Sync design system from tokens
+
+```javascript
+const tokensJson = readJson(".harn/design/design-tokens.json");
+const currentHash = sha1(JSON.stringify(tokensJson));
+
+if (!state.design_system_id) {
+  // First run
+  const ds = await mcp__stitch__create_design_system({
+    project_id: project.id,
+    name: `${state.project_name} DS`,
+    tokens: convertTokensForStitch(tokensJson) // see stitch-mcp.md <token_mapping>
+  });
+  state.design_system_id = ds.id;
+} else if (state.tokens_hash !== currentHash) {
+  // Tokens changed — update
+  await mcp__stitch__update_design_system({
+    design_system_id: state.design_system_id,
+    tokens: convertTokensForStitch(tokensJson)
+  });
+}
+
+// Always apply (cheap, guarantees new screens pick up current DS)
+await mcp__stitch__apply_design_system({
+  project_id: project.id,
+  design_system_id: state.design_system_id
+});
+
+state.tokens_hash = currentHash;
+writeJson(".harn/design/ui-state/stitch-state.json", state);
+```
+
+### Orchestrator Step 3: Plan per-screen action
+
+For each screen in scope (all screens, or the filtered subset from the command argument), decide the action:
+
+```javascript
+for (const screenId of screensInScope) {
+  const spec = readFile(`.harn/design/screens/${screenId}-*.md`);
+  const specHash = sha1(spec);
+  const existing = state.screen_mapping[screenId];
+
+  if (!existing) {
+    plan[screenId] = { action: "create", spec };
+  } else if (existing.spec_snapshot_hash === specHash) {
+    plan[screenId] = { action: "skip", reason: "no spec changes", screen_id: existing.screen_id };
+  } else if (isMajorRewrite(spec, existing)) {
+    plan[screenId] = { action: "regenerate", spec, previous_screen_id: existing.screen_id };
+  } else {
+    plan[screenId] = { action: "edit", spec, screen_id: existing.screen_id };
+  }
+}
+```
+
+`isMajorRewrite` is the heuristic described in `stitch-mcp.md <iteration_guidance>` (wireframe block rewritten, or >30% component diff). Regenerate deletes server-side and creates fresh — small edits use `edit_screens` to preserve IDs and variants.
+
+### Orchestrator Step 4: Build prompts and spawn subagents
+
+For each screen with action `create` or `regenerate`, build the full prompt via the shared `stitch.md` builder. For `edit`, build diff-focused edit instructions via `stitch.md <iteration_guidance>`.
+
+**Single screen in scope:** handle directly without spawning a subagent (Task overhead isn't worth it for one screen). Call `mcp__stitch__generate_screen_from_text` or `edit_screens` inline.
+
+**2+ screens in scope:** spawn one **ui-stitch-screen** agent per screen via the Task tool, all in parallel:
+
+```
+For each screenId with action in {create, edit, regenerate}:
+  Task(
+    subagent_type: "general-purpose",
+    description: "Export [screenId] to Stitch MCP",
+    prompt: """
+    You are a UI Stitch Screen Agent.
+    Read the agent instructions: ./.claude/agents/ui-stitch-screen.md
+
+    OPERATION: [create | edit]
+
+    PROJECT ID: [project.id]
+    DESIGN SYSTEM ID: [state.design_system_id]
+    SCREEN KEY: [screenId]
+    SCREEN NAME: [screen title from spec]
+    SCREEN ID: [existing.screen_id if edit, else omit]
+
+    [For create/regenerate:]
+    PROMPT TEXT (send VERBATIM to generate_screen_from_text.text):
+      <<<
+      [full prompt built by the orchestrator via stitch.md transformation_rules]
+      >>>
+
+    [For edit:]
+    EDIT INSTRUCTIONS (send VERBATIM to edit_screens.instructions):
+      <<<
+      [diff-style instructions built via stitch.md iteration_guidance]
+      >>>
+
+    GENERATE VARIANTS: [true|false]
+    VARIANTS COUNT: [3 if variants requested]
+
+    Execute the call and return a STITCH SCREEN RESULT block (format in ui-stitch-screen.md).
+    """
+  )
+```
+
+All Task invocations go out **in parallel** — each agent gets its own fresh context window.
+
+For screens with action `regenerate`, the orchestrator first deletes or archives the old screen server-side (if Stitch exposes that — otherwise just orphan the old ID with a note in the ops log) and sets the subagent's operation to `create`.
+
+For screens with action `skip`, no subagent is spawned; the orchestrator records them as "skipped" in the log.
+
+### Orchestrator Step 5: Collect results, persist state, write log
+
+Parse each agent's `STITCH SCREEN RESULT` block and merge into state:
+
+```javascript
+for (const result of results) {
+  const prev = state.screen_mapping[result.screen_key] ?? { variant_ids: [], version: 0 };
+  state.screen_mapping[result.screen_key] = {
+    screen_id: result.screen_id,
+    variant_ids: result.variant_ids,
+    last_update: nowIso(),
+    version: (prev.version ?? 0) + (result.operation === "edit" || result.operation === "create" ? 1 : 0),
+    spec_snapshot_hash: sha1(readFile(`.harn/design/screens/${result.screen_key}-*.md`))
+  };
+}
+
+state.last_sync = nowIso();
+writeJson(".harn/design/ui-state/stitch-state.json", state);
+```
+
+Then write the operations log, update `UI-REGISTRY.md`, and update `coordinator-state.json` (see `update_registry` and `update_state` steps — `stitch_mcp` block).
+
+### Output Log
+
+Write `.harn/design/ui-exports/stitch-operations.md`:
+
+```markdown
+# Stitch MCP Operations Log
+
+Generated: [ISO timestamp]
+Project: [project name] ([project_id])
+Design System: [DS name] ([design_system_id])
+Screens in scope: [N]
+Method: [Inline (single screen) | Parallel subagents (1 per screen)]
+
+## Pre-flight
+- ✓ MCP smoke test (list_projects) — OK in [ms]
+- ✓ Project resolved — [reused existing | created new]
+- ✓ Design system — [created | tokens unchanged, apply only | tokens changed, updated]
+
+## Per-screen results
+
+| Screen | Action | Screen ID | Version | Variants | Issues |
+|--------|--------|-----------|---------|----------|--------|
+| SCR-01 | edit | scr_001 | 2 | 0 | — |
+| SCR-02 | create | scr_002 | 1 | 0 | — |
+| SCR-03 | skip (no spec changes) | scr_003 | 1 | 0 | — |
+
+## Warnings
+[list any warnings surfaced by subagents or the orchestrator]
+
+## Next steps
+- Open the project in Stitch: [URL if available in the create_project response]
+- Iterate on one screen: `/ui:export stitch-mcp SCR-01`
+- Force regenerate a screen: delete its entry from `stitch-state.json` and re-run
+```
+</step>
+
 <step name="transform_to_design_md">
 ## DESIGN.md Export (VoltAgent Format)
 
@@ -916,11 +1149,11 @@ Update `.harn/design/UI-REGISTRY.md`:
 ```markdown
 ## Export History
 
-| Screen | Stitch | V0 | Figma | Pencil | Generic | Last Export |
-|--------|--------|----|-------|--------|---------|-------------|
-| SCR-01 | ✓ v2 | ✓ v1 | ✓ | ✓ screen_abc | ✓ | 2026-01-19 |
-| SCR-02 | ✓ v1 | ✓ v1 | ✓ | ✓ screen_def | ✓ | 2026-01-19 |
-| SCR-03 | ○ | ○ | ○ | ○ | ○ | - |
+| Screen | Stitch | Stitch MCP | V0 | Figma | Pencil | Generic | Last Export |
+|--------|--------|------------|----|-------|--------|---------|-------------|
+| SCR-01 | ✓ v2 | ✓ scr_001 v2 | ✓ v1 | ✓ | ✓ screen_abc | ✓ | 2026-01-19 |
+| SCR-02 | ✓ v1 | ○ | ✓ v1 | ✓ | ✓ screen_def | ✓ | 2026-01-19 |
+| SCR-03 | ○ | ○ | ○ | ○ | ○ | ○ | - |
 
 ## System-Level Exports
 
@@ -947,6 +1180,18 @@ Update `.harn/design/ui-state/coordinator-state.json`:
         "node_mapping": {
           "SCR-01": "screen_abc123",
           "SCR-02": "screen_def456"
+        }
+      },
+      "stitch_mcp": {
+        "count": [N],
+        "project_id": "prj_abc123",
+        "project_name": "[project name]",
+        "design_system_id": "ds_xyz789",
+        "state_file": ".harn/design/ui-state/stitch-state.json",
+        "last_export": "[ISO timestamp]",
+        "screen_mapping": {
+          "SCR-01": "scr_001",
+          "SCR-02": "scr_002"
         }
       },
       "design_md": {
@@ -1019,6 +1264,14 @@ Files:
 3. Review pencil-operations.md for details
 4. Iterate with Update operations if needed
 5. Node IDs recorded for future reference
+
+[For Stitch MCP]
+1. Screens executed directly in a live Stitch project via MCP
+2. Design tokens synced as a Stitch design system (reused across runs)
+3. Open the project URL printed in stitch-operations.md to review
+4. Iterate a single screen: `/ui:export stitch-mcp SCR-XX` (uses `edit_screens` to preserve IDs and variants)
+5. Force a full regeneration for one screen: delete its entry from `.harn/design/ui-state/stitch-state.json` and re-run
+6. If MCP is down when you run the command, you'll be asked whether to abort or fall back to the prompts-only flow
 
 [For DESIGN.md]
 1. Review .harn/design/ui-exports/DESIGN.md

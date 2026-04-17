@@ -103,6 +103,15 @@
       "author": "hgflima",
       "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/parallel-plan-runner",
       "path": "harnesses/parallel-plan-runner"
+    },
+    {
+      "name": "user-journey-map",
+      "version": "1.0.0",
+      "description": "Progressive-extraction skill for user journey maps with provenance marks, Mermaid diagrams, validation checklist, and explicit PRD boundary — input for PRD generation",
+      "categories": ["product", "design"],
+      "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/user-journey-map",
+      "path": "harnesses/user-journey-map"
     }
   ]
 }

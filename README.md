@@ -46,11 +46,11 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | **rules-generator** | Analyze a project's stack and generate tailored .claude/rules/ files | hgflima |
 | **github-readme-writer** | Generate comprehensive, professional README.md files for any project | alfredang |
 | **product-vision-frame** | Define a product's singular purpose and ruthlessly align all decisions to that vision | hgflima |
-| **customer-journey-to-be** | Generate to-be customer journey maps with phases, happy paths, exception flows, and Mermaid diagrams | hgflima |
 | **lessons-learned** | Post-incident analysis and correction for Claude Code sessions — diagnoses root causes, applies fixes, and persists structured changelogs | hgflima |
 | **product-brief** | Interactive wizard for creating structured product briefs across project levels (spike, POC, MVP, feature, product, platform) | hgflima |
 | **ui-design** | Service-agnostic UI/UX specification system — design tokens, screen specs, component definitions, and multi-tool export | hgflima |
 | **parallel-plan-runner** | Execute an implementation plan via Claude Code's experimental Agent Teams — parallelization analysis, teammate spawn, orchestration, and audit | hgflima |
+| **user-journey-map** | Progressive-extraction skill for user journey maps with provenance marks, Mermaid diagrams, validation checklist, and explicit PRD boundary — input for PRD generation | hgflima |
 
 ## Tech Stack
 

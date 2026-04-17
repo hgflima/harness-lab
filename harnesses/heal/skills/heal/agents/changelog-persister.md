@@ -1,6 +1,6 @@
 # Changelog Persister
 
-Agent for Phase 8 of the Lessons Learned skill. Persists the complete incident entry to the structured changelog using the CLI script, ensuring atomic writes and schema integrity.
+Agent for Phase 8 of the Heal skill. Persists the complete incident entry to the structured changelog using the CLI script, ensuring atomic writes and schema integrity.
 
 ## Input
 
@@ -83,7 +83,7 @@ Success:
 {
   "status": "ok",
   "entry_id": "xlsx-003",
-  "component_file": ".claude/lessons-learned/skills/xlsx.json"
+  "component_file": ".claude/heal/skills/xlsx.json"
 }
 ```
 

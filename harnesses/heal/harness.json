@@ -1,12 +1,12 @@
 {
-  "name": "lessons-learned",
-  "version": "1.0.0",
-  "description": "Post-incident analysis and correction skill for Claude Code sessions. Diagnoses root causes, applies corrective fixes to skills/rules/CLAUDE.md, and persists a structured changelog.",
+  "name": "heal",
+  "version": "1.1.0",
+  "description": "Self-healing harness for Claude Code sessions. After an unexpected outcome, diagnoses the root cause, proposes corrective fixes to the harness itself (skills, rules, CLAUDE.md), applies approved fixes, and persists a structured changelog to prevent recurrence. Includes /heal:migrate for users of the legacy lessons-learned harness.",
   "categories": ["software-engineering"],
   "author": "hgflima",
   "artifacts": {
-    "skills": ["lessons-learned"],
-    "commands": [],
+    "skills": ["heal"],
+    "commands": ["migrate"],
     "agents": [],
     "hooks": []
   }

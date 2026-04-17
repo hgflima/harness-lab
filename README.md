@@ -46,7 +46,7 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | **rules-generator** | Analyze a project's stack and generate tailored .claude/rules/ files | hgflima |
 | **github-readme-writer** | Generate comprehensive, professional README.md files for any project | alfredang |
 | **product-vision-frame** | Define a product's singular purpose and ruthlessly align all decisions to that vision | hgflima |
-| **lessons-learned** | Post-incident analysis and correction for Claude Code sessions — diagnoses root causes, applies fixes, and persists structured changelogs | hgflima |
+| **heal** | Self-healing post-incident harness — diagnoses root causes after a failed Claude Code session, applies approved fixes to skills/rules/CLAUDE.md, and persists structured changelogs to prevent recurrence. Includes `/heal:migrate` for upgrading from legacy `lessons-learned` installs | hgflima |
 | **product-brief** | Interactive wizard for creating structured product briefs across project levels (spike, POC, MVP, feature, product, platform) | hgflima |
 | **ui-design** | Service-agnostic UI/UX specification system — design tokens, screen specs, component definitions, and multi-tool export | hgflima |
 | **parallel-plan-runner** | Execute an implementation plan via Claude Code's experimental Agent Teams — parallelization analysis, teammate spawn, orchestration, and audit | hgflima |

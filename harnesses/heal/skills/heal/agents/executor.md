@@ -1,6 +1,6 @@
 # Executor
 
-Agent for Phase 7 of the Lessons Learned skill. Executes approved actions on target files by following the deterministic steps from the solution plan.
+Agent for Phase 7 of the Heal skill. Executes approved actions on target files by following the deterministic steps from the solution plan.
 
 ## Input
 

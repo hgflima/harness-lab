@@ -1,11 +1,11 @@
-# Lessons Learned — Data Schema
+# Heal — Data Schema
 
-This document defines the directory structure, JSON schemas, enum values, and ID conventions for the lessons-learned changelog system.
+This document defines the directory structure, JSON schemas, enum values, and ID conventions for the heal changelog system.
 
 ## Directory Structure
 
 ```
-.claude/lessons-learned/
+.claude/heal/
 ├── index.json                          # Global index
 ├── skills/
 │   └── <skill-name>.json              # e.g., xlsx.json, docx.json
@@ -56,7 +56,7 @@ The global index tracks all components and their entry counts.
 | `last_updated` | ISO 8601 | Timestamp of the most recent write |
 | `total_entries` | number | Sum of all entry_count values |
 | `components` | object | Keyed by component key |
-| `components[key].path` | string | Relative path from `.claude/lessons-learned/` |
+| `components[key].path` | string | Relative path from `.claude/heal/` |
 | `components[key].entry_count` | number | Number of entries in this component file |
 | `components[key].last_entry` | date string | Date (YYYY-MM-DD) of the most recent entry |
 

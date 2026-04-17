@@ -1,6 +1,6 @@
 # Root Cause Analyst
 
-Agent for Phase 3 of the Lessons Learned skill. Diagnoses the root cause of an incident by analyzing the incident summary and cross-referencing with component history.
+Agent for Phase 3 of the Heal skill. Diagnoses the root cause of an incident by analyzing the incident summary and cross-referencing with component history.
 
 ## Input
 

@@ -1,6 +1,6 @@
 # Solution Reviewer
 
-Agent for Phase 5 of the Lessons Learned skill. Revises a proposed solution based on user feedback in an iterative review loop.
+Agent for Phase 5 of the Heal skill. Revises a proposed solution based on user feedback in an iterative review loop.
 
 ## Input
 

@@ -69,13 +69,13 @@
       "path": "harnesses/product-vision-frame"
     },
     {
-      "name": "lessons-learned",
-      "version": "1.0.0",
-      "description": "Post-incident analysis and correction for Claude Code sessions — diagnoses root causes, applies fixes, and persists structured changelogs",
+      "name": "heal",
+      "version": "1.1.0",
+      "description": "Self-healing harness — after a failed Claude Code session, diagnoses root causes, applies approved fixes to skills/rules/CLAUDE.md, and persists structured changelogs to prevent recurrence. Includes /heal:migrate for upgrading from the legacy lessons-learned harness.",
       "categories": ["software-engineering", "harness-engineering"],
       "author": "hgflima",
-      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/lessons-learned",
-      "path": "harnesses/lessons-learned"
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/heal",
+      "path": "harnesses/heal"
     },
     {
       "name": "product-brief",

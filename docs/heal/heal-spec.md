@@ -1,4 +1,4 @@
-# Lessons Learned Skill — Specification
+# Heal Skill — Specification
 
 ## Purpose
 
@@ -43,7 +43,7 @@ The user may provide a brief description of the problem, but the primary source 
 
 ### Phase 2 — Load History
 - **Executor:** Skill (direct)
-- **What happens:** Reads `.claude/lessons-learned/index.json`. If the component has history, loads the corresponding JSON file. **Idempotent**: pure read, no side effects, no file creation, no state mutation. If the file doesn't exist, returns empty context. Never creates structure in this phase.
+- **What happens:** Reads `.claude/heal/index.json`. If the component has history, loads the corresponding JSON file. **Idempotent**: pure read, no side effects, no file creation, no state mutation. If the file doesn't exist, returns empty context. Never creates structure in this phase.
 - **Output:** Component history (or empty if first incident)
 
 ### Phase 3 — Root Cause Analysis
@@ -109,7 +109,7 @@ The user may provide a brief description of the problem, but the primary source 
 ## Directory Structure
 
 ```
-.claude/lessons-learned/
+.claude/heal/
 ├── index.json                          # Global index
 ├── skills/
 │   └── <skill-name>.json              # e.g., xlsx.json, docx.json

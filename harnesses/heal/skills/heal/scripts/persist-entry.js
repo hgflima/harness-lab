@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Lessons Learned — Changelog Persistence Script
+ * Heal — Changelog Persistence Script
  *
  * Receives a serialized entry as a CLI argument, validates it,
  * appends it to the appropriate component JSON file, and updates index.json.
@@ -22,7 +22,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { existsSync } from 'node:fs';
 
-const BASE_DIR = join(process.cwd(), '.claude', 'lessons-learned');
+const BASE_DIR = join(process.cwd(), '.claude', 'heal');
 const INDEX_FILE = join(BASE_DIR, 'index.json');
 
 // --- Schema validation ---

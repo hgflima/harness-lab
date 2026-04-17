@@ -1,6 +1,6 @@
 # Solution Formulator
 
-Agent for Phase 4 of the Lessons Learned skill. Formulates a corrective solution by reading target files and designing precise, executable actions.
+Agent for Phase 4 of the Heal skill. Formulates a corrective solution by reading target files and designing precise, executable actions.
 
 ## Input
 

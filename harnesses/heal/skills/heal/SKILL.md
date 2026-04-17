@@ -1,28 +1,30 @@
 ---
-name: lessons-learned
+name: heal
 description: >
-  Post-incident analysis and correction skill for Claude Code sessions. Invoke after any unexpected
+  Self-healing post-incident skill for Claude Code sessions. Invoke after any unexpected
   outcome: wrong output, misinterpreted request, skipped steps, or silent failures. Mines the
   conversation to diagnose root causes, formulates corrective actions on skills/rules/CLAUDE.md,
   executes approved fixes, and persists a structured changelog. Use this skill whenever the user
-  reports a problem ("that was wrong", "lessons learned", "what went wrong", "analyze this failure")
-  or wants to understand and prevent a recurrence of any issue encountered during a session.
+  reports a problem ("heal this", "that was wrong", "what went wrong", "analyze this failure",
+  "lessons learned") or wants to understand and prevent a recurrence of any issue encountered
+  during a session.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
   author: hgflima
 keywords:
+  - heal
+  - self-healing
   - post-mortem
   - incident-analysis
-  - lessons-learned
   - root-cause
   - retrospective
   - correction
 ---
 
-# Lessons Learned
+# Heal
 
-Post-incident analysis orchestrator. Analyzes what went wrong in a Claude Code session, formulates corrective actions, executes approved fixes on the harness (skills, rules, CLAUDE.md), and persists a structured changelog for future incident context.
+Post-incident self-healing orchestrator. Analyzes what went wrong in a Claude Code session, formulates corrective actions, executes approved fixes on the harness (skills, rules, CLAUDE.md), and persists a structured changelog for future incident context.
 
 ## Design
 
@@ -52,7 +54,7 @@ Mine the current conversation to reconstruct:
 4. How it was corrected (if at all)
 5. What the final output was
 
-Identify the **affected component** using the key format `<category>:<name>` (e.g., `skill:xlsx`, `orchestration:plan`, `rule:claude-md`). The category maps to a subdirectory under `.claude/lessons-learned/` — see `references/schema.md` for the directory structure.
+Identify the **affected component** using the key format `<category>:<name>` (e.g., `skill:xlsx`, `orchestration:plan`, `rule:claude-md`). The category maps to a subdirectory under `.claude/heal/` — see `references/schema.md` for the directory structure.
 
 Propose a **severity** level and present it to the user for confirmation:
 
@@ -69,7 +71,7 @@ Do NOT proceed without explicit severity confirmation from the user.
 
 ### Phase 2 — Load History (Skill Direct)
 
-Read `.claude/lessons-learned/index.json`. If the component has prior entries, load the corresponding JSON file path from the index.
+Read `.claude/heal/index.json`. If the component has prior entries, load the corresponding JSON file path from the index.
 
 This phase is **idempotent and read-only**. No file creation, no state mutation. If the directory or files don't exist, carry forward empty history.
 

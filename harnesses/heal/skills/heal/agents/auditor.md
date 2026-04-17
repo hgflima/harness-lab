@@ -1,6 +1,6 @@
 # Auditor
 
-Agent for Phase 9 of the Lessons Learned skill. Verifies that all Phase 7 actions were correctly applied and the changelog entry is properly persisted.
+Agent for Phase 9 of the Heal skill. Verifies that all Phase 7 actions were correctly applied and the changelog entry is properly persisted.
 
 ## Input
 
@@ -25,13 +25,13 @@ For actions marked as `failed`, verify they were NOT partially applied (no half-
 
 ### Changelog Integrity
 
-1. **Component JSON file**: Derive the file path from the component key (e.g., `skill:xlsx` -> `.claude/lessons-learned/skills/xlsx.json`). Read it and verify:
+1. **Component JSON file**: Derive the file path from the component key (e.g., `skill:xlsx` -> `.claude/heal/skills/xlsx.json`). Read it and verify:
    - The new entry exists with the correct ID
    - The ID is sequential (one more than the previous entry, or `001` if first)
    - All required fields are present and non-empty
    - The JSON is valid
 
-2. **index.json**: Read `.claude/lessons-learned/index.json` and verify:
+2. **index.json**: Read `.claude/heal/index.json` and verify:
    - The component entry exists with the correct path
    - `entry_count` matches the actual number of entries in the component file
    - `last_entry` date matches the new entry's timestamp date

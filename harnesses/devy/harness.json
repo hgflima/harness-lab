@@ -1,0 +1,52 @@
+{
+  "name": "devy",
+  "version": "1.0.0",
+  "description": "Engineering workflow bundle for Claude Code: phase-based skills (spec, plan, build, test, debug, review, simplify, ship) orchestrated by the devy-meta skill, plus 11 /devy:* commands that drive each phase.",
+  "categories": ["software-engineering"],
+  "author": "hgflima",
+  "artifacts": {
+    "skills": [
+      "api-and-interface-design",
+      "browser-testing-with-devtools",
+      "ci-cd-and-automation",
+      "clean-architecture",
+      "code-review-and-quality",
+      "code-simplification",
+      "context-engineering",
+      "debug-like-expert",
+      "debugging-and-error-recovery",
+      "deprecation-and-migration",
+      "devy-meta",
+      "documentation-and-adrs",
+      "domain-driven-design",
+      "domain-modeling",
+      "frontend-ui-engineering",
+      "git-workflow-and-versioning",
+      "idea-refine",
+      "incremental-implementation",
+      "performance-optimization",
+      "planning-and-task-breakdown",
+      "refactor-guide",
+      "security-and-hardening",
+      "shipping-and-launch",
+      "source-driven-development",
+      "spec-driven-development",
+      "test-driven-development"
+    ],
+    "commands": [
+      "devy/build",
+      "devy/code-simplify",
+      "devy/debug",
+      "devy/handoff",
+      "devy/plan",
+      "devy/quality-assessment",
+      "devy/refine",
+      "devy/review",
+      "devy/ship",
+      "devy/spec",
+      "devy/test"
+    ],
+    "agents": [],
+    "hooks": []
+  }
+}

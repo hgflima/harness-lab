@@ -112,6 +112,15 @@
       "author": "hgflima",
       "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/user-journey-map",
       "path": "harnesses/user-journey-map"
+    },
+    {
+      "name": "devy",
+      "version": "1.0.0",
+      "description": "Engineering workflow bundle: phase-based skills orchestrated by devy-meta, with /devy:* commands per phase (spec, plan, build, test, debug, review, simplify, ship)",
+      "categories": ["software-engineering"],
+      "author": "hgflima",
+      "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/devy",
+      "path": "harnesses/devy"
     }
   ]
 }

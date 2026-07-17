@@ -6,7 +6,7 @@ Curated public registry of AI agent harnesses (skills, commands, agents, hooks) 
 
 - **Language:** JavaScript (ESM, Node.js >= 18)
 - **Dependencies:** Zero — uses only Node.js built-ins (`node:fs/promises`, `node:path`, `node:os`, `node:readline`, `node:child_process`)
-- **Data source:** GitHub Raw (`raw.githubusercontent.com`) for files, GitHub REST API (`api.github.com`) for directory listings
+- **Data source:** GitHub Raw (`raw.githubusercontent.com`) for catalog/manifests, repo tarball (`codeload.github.com`) for artifact installs
 - **Distribution:** npm (`npx` for bootstrap, `npm install -g` for persistence)
 
 ## Project Structure

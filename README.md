@@ -60,7 +60,7 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | Language | JavaScript (ESM) |
 | Runtime | Node.js >= 18 |
 | Dependencies | Zero — Node.js built-ins only |
-| Data Source | GitHub Raw + GitHub REST API |
+| Data Source | GitHub Raw + repo tarball (codeload) |
 | Distribution | npm / npx |
 
 ## Architecture
@@ -92,8 +92,8 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 ┌───────────────────────────────────────────────────┐
 │              GitHub (Remote Data)                 │
 │                                                   │
-│   raw.githubusercontent.com   api.github.com      │
-│   (catalog.json, artifacts)   (directory listings)│
+│   raw.githubusercontent.com   codeload.github.com │
+│   (catalog.json, manifests)   (repo tarball)      │
 └───────────────────────────────────────────────────┘
 ```
 

@@ -13,4 +13,4 @@ Begin by understanding what the user wants to build. Ask clarifying questions ab
 
 Then generate a structured spec covering all six core areas: objective, commands, project structure, code style, testing strategy, and boundaries.
 
-Save the spec as SPEC.md in the project root and confirm with the user before proceeding.
+Save the spec as spec.md in the `.harn/devy/changes/{C-XXXX}-{slug}` where `XXXX` is a four digits incremental number like: 0001, 0023, 0102, 1922.

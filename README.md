@@ -51,7 +51,7 @@ Plugins are great for MCP integrations, LSP servers, and hook-heavy workflows. B
 | **ui-design** | Service-agnostic UI/UX specification system — design tokens, screen specs, component definitions, and multi-tool export | hgflima |
 | **parallel-plan-runner** | Execute an implementation plan via Claude Code's experimental Agent Teams — parallelization analysis, teammate spawn, orchestration, and audit | hgflima |
 | **user-journey-map** | Progressive-extraction skill for user journey maps with provenance marks, Mermaid diagrams, validation checklist, and explicit PRD boundary — input for PRD generation | hgflima |
-| **devy** | Engineering workflow bundle: 26 phase-based skills orchestrated by devy-meta, with 11 /devy:* commands per phase (spec, plan, build, test, debug, review, simplify, ship) | hgflima |
+| **devy** | Engineering workflow bundle: 26 phase-based skills orchestrated by devy-meta, with 14 /devy:* commands per phase (spec, plan, build, test, debug, review, simplify, ship) and a /devy:loop suite for autonomous pipeline runs | hgflima |
 
 ## Tech Stack
 

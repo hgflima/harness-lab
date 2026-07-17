@@ -115,8 +115,8 @@
     },
     {
       "name": "devy",
-      "version": "1.0.0",
-      "description": "Engineering workflow bundle: phase-based skills orchestrated by devy-meta, with /devy:* commands per phase (spec, plan, build, test, debug, review, simplify, ship)",
+      "version": "1.1.0",
+      "description": "Engineering workflow bundle: phase-based skills orchestrated by devy-meta, with /devy:* commands per phase (spec, plan, build, test, debug, review, simplify, ship) and a /devy:loop suite for autonomous pipeline runs",
       "categories": ["software-engineering"],
       "author": "hgflima",
       "repository_url": "https://github.com/hgflima/harness-lab/tree/main/harnesses/devy",

@@ -1,83 +1,106 @@
 // Install/uninstall harness artifacts to/from .claude/ directory
 
-import { mkdir, writeFile, rm, readdir, stat } from 'node:fs/promises';
+import { mkdir, writeFile, rm, readdir, readFile, mkdtemp, cp, access } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
-import { fetchHarnessJson, getRepoBase } from './catalog.js';
+import { tmpdir } from 'node:os';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { fetchHarnessJson, getRepoTarballUrl } from './catalog.js';
 import { resolveTarget } from './scope.js';
 
-async function fetchFile(url) {
+const execFileAsync = promisify(execFile);
+
+// Downloads the whole repo as a single tarball and extracts it to a temp dir.
+// codeload.github.com is not subject to the GitHub REST API rate limit
+// (60 req/h unauthenticated) that per-directory content listings hit.
+export async function downloadRepoSnapshot() {
+  const url = getRepoTarballUrl();
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
-  return res.text();
-}
-
-async function fetchDirectoryListing(repoBase, dirPath) {
-  // Use GitHub API to list directory contents
-  const apiUrl = `https://api.github.com/repos/hgflima/harness-lab/contents/${dirPath}`;
-  const res = await fetch(apiUrl);
-  if (!res.ok) return [];
-  const items = await res.json();
-  return Array.isArray(items) ? items : [];
-}
-
-async function downloadDirectory(repoBase, remotePath, localPath) {
-  const items = await fetchDirectoryListing(repoBase, remotePath);
-
-  for (const item of items) {
-    const localItemPath = join(localPath, item.name);
-
-    if (item.type === 'file') {
-      const content = await fetchFile(item.download_url);
-      await mkdir(dirname(localItemPath), { recursive: true });
-      await writeFile(localItemPath, content, 'utf-8');
-    } else if (item.type === 'dir') {
-      await downloadDirectory(repoBase, item.path, localItemPath);
-    }
+  if (!res.ok) {
+    throw new Error(`Failed to download repository archive (${res.status}): ${url}`);
   }
+
+  const tempDir = await mkdtemp(join(tmpdir(), 'harness-lab-'));
+  const tarPath = join(tempDir, 'repo.tar.gz');
+  await writeFile(tarPath, Buffer.from(await res.arrayBuffer()));
+
+  const repoDir = join(tempDir, 'repo');
+  await mkdir(repoDir);
+  await execFileAsync('tar', ['-xzf', tarPath, '-C', repoDir, '--strip-components=1']);
+
+  return {
+    dir: repoDir,
+    cleanup: () => rm(tempDir, { recursive: true, force: true }),
+  };
 }
 
-export async function installHarness(harnessName, harnessPath, scope) {
+async function copyArtifact(srcPath, destPath, label) {
+  try {
+    await access(srcPath);
+  } catch {
+    throw new Error(`${label} is declared in harness.json but missing from the repository archive`);
+  }
+  await mkdir(dirname(destPath), { recursive: true });
+  await cp(srcPath, destPath, { recursive: true });
+}
+
+// repoDir: optional path to an already-extracted repo snapshot, so callers
+// installing multiple harnesses (e.g. update) download the tarball only once.
+export async function installHarness(harnessName, harnessPath, scope, repoDir = null) {
   const target = resolveTarget(scope);
-  const repoBase = getRepoBase();
-  const harness = await fetchHarnessJson(harnessPath);
+  const snapshot = repoDir ? null : await downloadRepoSnapshot();
+  const repo = repoDir ?? snapshot.dir;
   const installed = [];
 
-  // Install skills
-  for (const skillName of harness.artifacts.skills) {
-    const remotePath = `${harnessPath}/skills/${skillName}`;
-    const localPath = join(target, 'skills', skillName);
-    await downloadDirectory(repoBase, remotePath, localPath);
-    installed.push(`skill: ${skillName}`);
-  }
-
-  // Install commands
-  for (const cmdName of harness.artifacts.commands) {
-    const remoteUrl = `${repoBase}/${harnessPath}/commands/${cmdName}.md`;
-    const localPath = join(target, 'commands', `${cmdName}.md`);
-    const content = await fetchFile(remoteUrl);
-    await mkdir(dirname(localPath), { recursive: true });
-    await writeFile(localPath, content, 'utf-8');
-    installed.push(`command: ${cmdName}`);
-  }
-
-  // Install agents
-  for (const agentName of harness.artifacts.agents) {
-    const remoteUrl = `${repoBase}/${harnessPath}/agents/${agentName}.md`;
-    const localPath = join(target, 'agents', `${agentName}.md`);
-    const content = await fetchFile(remoteUrl);
-    await mkdir(dirname(localPath), { recursive: true });
-    await writeFile(localPath, content, 'utf-8');
-    installed.push(`agent: ${agentName}`);
-  }
-
-  // Install directories (shared resources like templates, adapters, references)
-  if (harness.artifacts.directories) {
-    for (const dirName of harness.artifacts.directories) {
-      const remotePath = `${harnessPath}/${dirName}`;
-      const localPath = join(target, dirName);
-      await downloadDirectory(repoBase, remotePath, localPath);
-      installed.push(`directory: ${dirName}`);
+  try {
+    let manifestRaw;
+    try {
+      manifestRaw = await readFile(join(repo, harnessPath, 'harness.json'), 'utf-8');
+    } catch {
+      throw new Error(`harness.json not found in repository archive at ${harnessPath}`);
     }
+    const harness = JSON.parse(manifestRaw);
+
+    for (const skillName of harness.artifacts.skills) {
+      await copyArtifact(
+        join(repo, harnessPath, 'skills', skillName),
+        join(target, 'skills', skillName),
+        `Skill "${skillName}"`
+      );
+      installed.push(`skill: ${skillName}`);
+    }
+
+    for (const cmdName of harness.artifacts.commands) {
+      await copyArtifact(
+        join(repo, harnessPath, 'commands', `${cmdName}.md`),
+        join(target, 'commands', `${cmdName}.md`),
+        `Command "${cmdName}"`
+      );
+      installed.push(`command: ${cmdName}`);
+    }
+
+    for (const agentName of harness.artifacts.agents) {
+      await copyArtifact(
+        join(repo, harnessPath, 'agents', `${agentName}.md`),
+        join(target, 'agents', `${agentName}.md`),
+        `Agent "${agentName}"`
+      );
+      installed.push(`agent: ${agentName}`);
+    }
+
+    // Install directories (shared resources like templates, adapters, references)
+    if (harness.artifacts.directories) {
+      for (const dirName of harness.artifacts.directories) {
+        await copyArtifact(
+          join(repo, harnessPath, dirName),
+          join(target, dirName),
+          `Directory "${dirName}"`
+        );
+        installed.push(`directory: ${dirName}`);
+      }
+    }
+  } finally {
+    if (snapshot) await snapshot.cleanup();
   }
 
   return installed;

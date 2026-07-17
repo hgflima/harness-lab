@@ -1,6 +1,7 @@
 // Fetch and parse catalog.json from GitHub
 
 const REPO_BASE = 'https://raw.githubusercontent.com/hgflima/harness-lab/main';
+const REPO_TARBALL_URL = 'https://codeload.github.com/hgflima/harness-lab/tar.gz/refs/heads/main';
 
 export async function fetchCatalog() {
   const res = await fetch(`${REPO_BASE}/catalog.json`);
@@ -16,4 +17,8 @@ export async function fetchHarnessJson(harnessPath) {
 
 export function getRepoBase() {
   return REPO_BASE;
+}
+
+export function getRepoTarballUrl() {
+  return REPO_TARBALL_URL;
 }

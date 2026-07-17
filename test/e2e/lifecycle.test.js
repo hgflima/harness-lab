@@ -97,8 +97,8 @@ describe('E2E: install/uninstall/update lifecycle', { timeout: 60_000 }, () => {
         return;
       }
       const { stdout } = result;
-      assert.ok(stdout.includes('prd-generator'));
-      assert.ok(stdout.includes('v1.0.0'));
+      assert.match(stdout, /prd-generator v\d+\.\d+\.\d+/);
+      assert.ok(stdout.includes('✓ skill: prd-generator'));
 
       const skillPath = join(tempDir, '.claude', 'skills', 'prd-generator', 'SKILL.md');
       assert.ok(await exists(skillPath), 'SKILL.md should exist after update');
